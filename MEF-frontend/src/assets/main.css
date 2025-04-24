@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+* {
+  font-family: inter, sans-serif;
+}
+
+@theme {
+  --color-primary-red: #b53143;
+  --color-secondary-red: #694c55;
+  --color-light-blue: #a087f4;
+  --color-light-green: #00e0e9;
+  --font-timenew: 'Times New Roman', Times, serif;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
