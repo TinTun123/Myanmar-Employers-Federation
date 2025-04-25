@@ -7,172 +7,12 @@ export const useNewsStore = defineStore('news', {
     activities: {
       data: [],
     },
-    statements: [
-      {
-        id: 1,
-        title: 'Myanmar Employers Fedration (MEF) ၏ ကြေငြာချက်(Statement)',
-        committee: 'ဗဟိုအလုပ်အမှုဆောင်ကော်မီတီဝင်',
-        statementNo: ' စာအမှတ် ။ ၀၀၂/၀၁/၂၅ ',
-        body: '၁။။  စစ်အာဏာရှင်မင်းအောင်လှိုင် ဦးစီးသော စစ်ကောင်စီကို ဆန့်ကျင်ဖြုတ်ချရန် ၊ Myanma Nway Oo Employers Federation (MNEF) ကို ၂၀၂၃ ခုနှစ် နိုဝင်ဘာလ ၁ ရက်နေ့လွတ်မြောက်နယ်မြေတွင်စတင်ဖွဲ့စည်းခဲ့ပါသည်။ ၂၀၂၄ ခုနှစ် အောက်တိုဘာလ ၁၄ ရက်နေ့တွင် နွေဦးတော်လှန်ရေးအလွန်ကာလကိုမျှော်မှန်းပြီး MNEF အစား Myanmar Employers Federation (MEF)ဟုအမည်ပြောင်းလည်းဆောင်ရွက်ခဲ့ပါသည်။ ၂။။  မိဘပြည်သူများအားလုံးနှင့်လုပ်ငန်းရှင်များအားလုံးသည် Myanma Nway Oo Employers Federation (MNEF) Page အစား Myanmar Employers Federation (MEF) Page ကို ပြောင်းလဲကြည့်ရှု အကြံအဉာဏ်များ ပေးနိုင်ကြပါရန် လေးစားစွာ ကြေငြာတင်ပြအပ်ပါသည်ခင်ဗျား။',
-        date: '14 Feb 2025',
-        images: [
-          '/assets/statement.jpeg',
-          '/assets/statement.jpeg',
-          '/assets/statement.jpeg',
-          '/assets/statement.jpeg',
-          '/assets/statement.jpeg',
-          '/assets/statement.jpeg',
-          '/assets/statement.jpeg',
-        ],
-        comments: [
-          {
-            id: 1,
-            name: 'Tin Tun Oo',
-            comment:
-              'ILO အဆိုပါအရေးပေါ်အရေးယူမှုက ပုံမှန်ထက် ပိုမိုပြင်းထန်တဲ့ အချက်ပြတစ်ခုပါ။ မြန်မာနိုင်ငံလို စစ်အာဏာရှင် လက်ထက် ကူညီဖိနှိပ်ခံနေရတဲ့ အလုပ်သမားတွေ့အတွက် တရားမျှတမှုရဖို့ ဒီလိုနည်းလမ်းတွေလိုပါတယ်။',
-            date: '2023-01-02',
-          },
-          {
-            id: 2,
-            name: 'Thiha',
-            comment:
-              'ILO Article 33 သုံးခြင်းက လုပ်သားအခွင့်အရေးဖိနှိပ်မှု အပေါ်တင်စားမှုတစ်ခုပါပဲ။ ဒီလိုနည်းလမ်းတွေက ဝိုင်းဝန်းကူညီရမယ့် အချိန်ပါ။',
-            date: '2023-01-03',
-          },
-          {
-            id: 3,
-            name: 'Moe Aye',
-            comment:
-              'ILO အဆိုပါအရေးပေါ်အရေးယူမှုက ပုံမှန်ထက် ပိုမိုပြင်းထန်တဲ့ အချက်ပြတစ်ခုပါ။ မြန်မာနိုင်ငံလို စစ်အာဏာရှင် လက်ထက် ကူညီဖိနှိပ်ခံနေရတဲ့ အလုပ်သမားတွေ့အတွက် တရားမျှတမှုရဖို့ ဒီလိုနည်းလမ်းတွေလိုပါတယ်။',
-            date: '2023-01-02',
-          },
-          {
-            id: 4,
-            name: 'Thiha',
-            comment:
-              'ILO Article 33 သုံးခြင်းက လုပ်သားအခွင့်အရေးဖိနှိပ်မှု အပေါ်တင်စားမှုတစ်ခုပါပဲ။ ဒီလိုနည်းလမ်းတွေက ဝိုင်းဝန်းကူညီရမယ့် အချိန်ပါ။',
-            date: '2023-01-03',
-          },
-        ],
-      },
-      {
-        id: 2,
-        title: 'Myanmar Employers Fedration (MEF) ၏ ကြေငြာချက်(Statement)',
-        statementNo: ' စာအမှတ် ။ ၃/၀၁/၂၅ ',
-        committee: 'ဗဟိုအလုပ်အမှုဆောင်ကော်မီတီဝင်',
-        body: '၁။။  စစ်အာဏာရှင်မင်းအောင်လှိုင် ဦးစီးသော စစ်ကောင်စီကို ဆန့်ကျင်ဖြုတ်ချရန် ၊ Myanma Nway Oo Employers Federation (MNEF) ကို ၂၀၂၃ ခုနှစ် နိုဝင်ဘာလ ၁ ရက်နေ့လွတ်မြောက်နယ်မြေတွင်စတင်ဖွဲ့စည်းခဲ့ပါသည်။ ၂၀၂၄ ခုနှစ် အောက်တိုဘာလ ၁၄ ရက်နေ့တွင် နွေဦးတော်လှန်ရေးအလွန်ကာလကိုမျှော်မှန်းပြီး MNEF အစား Myanmar Employers Federation (MEF)ဟုအမည်ပြောင်းလည်းဆောင်ရွက်ခဲ့ပါသည်။ ၂။။  မိဘပြည်သူများအားလုံးနှင့်လုပ်ငန်းရှင်များအားလုံးသည် Myanma Nway Oo Employers Federation (MNEF) Page အစား Myanmar Employers Federation (MEF) Page ကို ပြောင်းလဲကြည့်ရှု အကြံအဉာဏ်များ ပေးနိုင်ကြပါရန် လေးစားစွာ ကြေငြာတင်ပြအပ်ပါသည်ခင်ဗျား။',
-        date: '14 Feb 2025',
-        images: ['/assets/statement.jpeg', '/assets/statement.jpeg', '/assets/statement.jpeg'],
-        comments: [
-          {
-            id: 1,
-            name: 'Tin Tun Oo',
-            comment:
-              'ILO အဆိုပါအရေးပေါ်အရေးယူမှုက ပုံမှန်ထက် ပိုမိုပြင်းထန်တဲ့ အချက်ပြတစ်ခုပါ။ မြန်မာနိုင်ငံလို စစ်အာဏာရှင် လက်ထက် ကူညီဖိနှိပ်ခံနေရတဲ့ အလုပ်သမားတွေ့အတွက် တရားမျှတမှုရဖို့ ဒီလိုနည်းလမ်းတွေလိုပါတယ်။',
-            date: '2023-01-02',
-          },
-          {
-            id: 2,
-            name: 'Thiha',
-            comment:
-              'ILO Article 33 သုံးခြင်းက လုပ်သားအခွင့်အရေးဖိနှိပ်မှု အပေါ်တင်စားမှုတစ်ခုပါပဲ။ ဒီလိုနည်းလမ်းတွေက ဝိုင်းဝန်းကူညီရမယ့် အချိန်ပါ။',
-            date: '2023-01-03',
-          },
-          {
-            id: 3,
-            name: 'Moe Aye',
-            comment:
-              'ILO အဆိုပါအရေးပေါ်အရေးယူမှုက ပုံမှန်ထက် ပိုမိုပြင်းထန်တဲ့ အချက်ပြတစ်ခုပါ။ မြန်မာနိုင်ငံလို စစ်အာဏာရှင် လက်ထက် ကူညီဖိနှိပ်ခံနေရတဲ့ အလုပ်သမားတွေ့အတွက် တရားမျှတမှုရဖို့ ဒီလိုနည်းလမ်းတွေလိုပါတယ်။',
-            date: '2023-01-02',
-          },
-          {
-            id: 4,
-            name: 'Thiha',
-            comment:
-              'ILO Article 33 သုံးခြင်းက လုပ်သားအခွင့်အရေးဖိနှိပ်မှု အပေါ်တင်စားမှုတစ်ခုပါပဲ။ ဒီလိုနည်းလမ်းတွေက ဝိုင်းဝန်းကူညီရမယ့် အချိန်ပါ။',
-            date: '2023-01-03',
-          },
-        ],
-      },
-      {
-        id: 3,
-        title: 'Myanmar Employers Fedration (MEF) ၏ ကြေငြာချက်(Statement)',
-        statementNo: ' စာအမှတ် ။ ၀၀၂/၀၁/၂၅ ',
-        committee: 'ဗဟိုအလုပ်အမှုဆောင်ကော်မီတီဝင်',
-        body: '၁။။  စစ်အာဏာရှင်မင်းအောင်လှိုင် ဦးစီးသော စစ်ကောင်စီကို ဆန့်ကျင်ဖြုတ်ချရန် ၊ Myanma Nway Oo Employers Federation (MNEF) ကို ၂၀၂၃ ခုနှစ် နိုဝင်ဘာလ ၁ ရက်နေ့လွတ်မြောက်နယ်မြေတွင်စတင်ဖွဲ့စည်းခဲ့ပါသည်။ ၂၀၂၄ ခုနှစ် အောက်တိုဘာလ ၁၄ ရက်နေ့တွင် နွေဦးတော်လှန်ရေးအလွန်ကာလကိုမျှော်မှန်းပြီး MNEF အစား Myanmar Employers Federation (MEF)ဟုအမည်ပြောင်းလည်းဆောင်ရွက်ခဲ့ပါသည်။ ၂။။  မိဘပြည်သူများအားလုံးနှင့်လုပ်ငန်းရှင်များအားလုံးသည် Myanma Nway Oo Employers Federation (MNEF) Page အစား Myanmar Employers Federation (MEF) Page ကို ပြောင်းလဲကြည့်ရှု အကြံအဉာဏ်များ ပေးနိုင်ကြပါရန် လေးစားစွာ ကြေငြာတင်ပြအပ်ပါသည်ခင်ဗျား။',
-        date: '14 Feb 2025',
-        images: ['/assets/statement.jpeg', '/assets/statement.jpeg', '/assets/statement.jpeg'],
-        comments: [
-          {
-            id: 1,
-            name: 'Tin Tun Oo',
-            comment:
-              'ILO အဆိုပါအရေးပေါ်အရေးယူမှုက ပုံမှန်ထက် ပိုမိုပြင်းထန်တဲ့ အချက်ပြတစ်ခုပါ။ မြန်မာနိုင်ငံလို စစ်အာဏာရှင် လက်ထက် ကူညီဖိနှိပ်ခံနေရတဲ့ အလုပ်သမားတွေ့အတွက် တရားမျှတမှုရဖို့ ဒီလိုနည်းလမ်းတွေလိုပါတယ်။',
-            date: '2023-01-02',
-          },
-          {
-            id: 2,
-            name: 'Thiha',
-            comment:
-              'ILO Article 33 သုံးခြင်းက လုပ်သားအခွင့်အရေးဖိနှိပ်မှု အပေါ်တင်စားမှုတစ်ခုပါပဲ။ ဒီလိုနည်းလမ်းတွေက ဝိုင်းဝန်းကူညီရမယ့် အချိန်ပါ။',
-            date: '2023-01-03',
-          },
-          {
-            id: 3,
-            name: 'Moe Aye',
-            comment:
-              'ILO အဆိုပါအရေးပေါ်အရေးယူမှုက ပုံမှန်ထက် ပိုမိုပြင်းထန်တဲ့ အချက်ပြတစ်ခုပါ။ မြန်မာနိုင်ငံလို စစ်အာဏာရှင် လက်ထက် ကူညီဖိနှိပ်ခံနေရတဲ့ အလုပ်သမားတွေ့အတွက် တရားမျှတမှုရဖို့ ဒီလိုနည်းလမ်းတွေလိုပါတယ်။',
-            date: '2023-01-02',
-          },
-          {
-            id: 4,
-            name: 'Thiha',
-            comment:
-              'ILO Article 33 သုံးခြင်းက လုပ်သားအခွင့်အရေးဖိနှိပ်မှု အပေါ်တင်စားမှုတစ်ခုပါပဲ။ ဒီလိုနည်းလမ်းတွေက ဝိုင်းဝန်းကူညီရမယ့် အချိန်ပါ။',
-            date: '2023-01-03',
-          },
-        ],
-      },
-      {
-        id: 4,
-        title: 'Myanmar Employers Fedration (MEF) ၏ ကြေငြာချက်(Statement)',
-        statementNo: ' စာအမှတ် ။ ၀၀၂/၀၁/၂၅ ',
-        committee: 'ဗဟိုအလုပ်အမှုဆောင်ကော်မီတီဝင်',
-        body: '၁။။  စစ်အာဏာရှင်မင်းအောင်လှိုင် ဦးစီးသော စစ်ကောင်စီကို ဆန့်ကျင်ဖြုတ်ချရန် ၊ Myanma Nway Oo Employers Federation (MNEF) ကို ၂၀၂၃ ခုနှစ် နိုဝင်ဘာလ ၁ ရက်နေ့လွတ်မြောက်နယ်မြေတွင်စတင်ဖွဲ့စည်းခဲ့ပါသည်။ ၂၀၂၄ ခုနှစ် အောက်တိုဘာလ ၁၄ ရက်နေ့တွင် နွေဦးတော်လှန်ရေးအလွန်ကာလကိုမျှော်မှန်းပြီး MNEF အစား Myanmar Employers Federation (MEF)ဟုအမည်ပြောင်းလည်းဆောင်ရွက်ခဲ့ပါသည်။ ၂။။  မိဘပြည်သူများအားလုံးနှင့်လုပ်ငန်းရှင်များအားလုံးသည် Myanma Nway Oo Employers Federation (MNEF) Page အစား Myanmar Employers Federation (MEF) Page ကို ပြောင်းလဲကြည့်ရှု အကြံအဉာဏ်များ ပေးနိုင်ကြပါရန် လေးစားစွာ ကြေငြာတင်ပြအပ်ပါသည်ခင်ဗျား။',
-        date: '14 Feb 2025',
-        images: ['/assets/statement.jpeg', '/assets/statement.jpeg', '/assets/statement.jpeg'],
-        comments: [
-          {
-            id: 1,
-            name: 'Tin Tun Oo',
-            comment:
-              'ILO အဆိုပါအရေးပေါ်အရေးယူမှုက ပုံမှန်ထက် ပိုမိုပြင်းထန်တဲ့ အချက်ပြတစ်ခုပါ။ မြန်မာနိုင်ငံလို စစ်အာဏာရှင် လက်ထက် ကူညီဖိနှိပ်ခံနေရတဲ့ အလုပ်သမားတွေ့အတွက် တရားမျှတမှုရဖို့ ဒီလိုနည်းလမ်းတွေလိုပါတယ်။',
-            date: '2023-01-02',
-          },
-          {
-            id: 2,
-            name: 'Thiha',
-            comment:
-              'ILO Article 33 သုံးခြင်းက လုပ်သားအခွင့်အရေးဖိနှိပ်မှု အပေါ်တင်စားမှုတစ်ခုပါပဲ။ ဒီလိုနည်းလမ်းတွေက ဝိုင်းဝန်းကူညီရမယ့် အချိန်ပါ။',
-            date: '2023-01-03',
-          },
-          {
-            id: 3,
-            name: 'Moe Aye',
-            comment:
-              'ILO အဆိုပါအရေးပေါ်အရေးယူမှုက ပုံမှန်ထက် ပိုမိုပြင်းထန်တဲ့ အချက်ပြတစ်ခုပါ။ မြန်မာနိုင်ငံလို စစ်အာဏာရှင် လက်ထက် ကူညီဖိနှိပ်ခံနေရတဲ့ အလုပ်သမားတွေ့အတွက် တရားမျှတမှုရဖို့ ဒီလိုနည်းလမ်းတွေလိုပါတယ်။',
-            date: '2023-01-02',
-          },
-          {
-            id: 4,
-            name: 'Thiha',
-            comment:
-              'ILO Article 33 သုံးခြင်းက လုပ်သားအခွင့်အရေးဖိနှိပ်မှု အပေါ်တင်စားမှုတစ်ခုပါပဲ။ ဒီလိုနည်းလမ်းတွေက ဝိုင်းဝန်းကူညီရမယ့် အချိန်ပါ။',
-            date: '2023-01-03',
-          },
-        ],
-      },
-    ],
+    statements: {
+      data: [],
+    },
+    likeRecord: localStorage.getItem('likeRecord')
+      ? JSON.parse(localStorage.getItem('likeRecord'))
+      : {},
   }),
   actions: {
     async fetchPosts() {
@@ -181,15 +21,23 @@ export const useNewsStore = defineStore('news', {
         return response
       })
     },
+    async fetchStatements() {
+      return axiosClient.get('/statements').then((response) => {
+        this.statements = response.data
+
+        return response
+      })
+    },
+
     getPostById(postId) {
       return this.activities.data.find((post) => post.id === postId)
     },
     getStatementById(statementId) {
-      return this.statements.find((statement) => statement.id === statementId)
+      return this.statements.data.find((statement) => statement.id === statementId)
     },
     async updatePost(postId, updatedPost) {
       const formData = new FormData()
-      formData.append('_method', 'PATCH')
+      formData.append('_method', 'PUT')
       Object.keys(updatedPost).forEach((key) => {
         if (key === 'imgFile' && updatedPost[key] instanceof File) {
           // Append the file directly
@@ -238,6 +86,109 @@ export const useNewsStore = defineStore('news', {
       return axiosClient.delete(`/news/${postId}`).then((response) => {
         if (response.status === 200) {
           this.activities.data = this.activities.data.filter((post) => post.id !== postId)
+        }
+
+        return response
+      })
+    },
+    async addComment(type, postId, comment, name) {
+      const formData = new FormData()
+      formData.append('comment', comment)
+      formData.append('name', name)
+
+      return axiosClient.post(`/${type}/${postId}/comments`, formData).then((response) => {
+        if (response.status === 201) {
+          const post = this.activities.data.find((post) => post.id === postId)
+          if (post) {
+            post.comments.push(response.data.data)
+          }
+        }
+
+        return response
+      })
+    },
+    addLikeRecord(postId, type) {
+      if (type === 'news') {
+        if (!this.likeRecord.news) {
+          this.likeRecord.news = []
+          this.likeRecord.news.push(postId)
+        } else {
+          this.likeRecord.news.push(postId)
+        }
+      } else {
+        if (!this.likeRecord.statement) {
+          this.likeRecord.statement = []
+          this.likeRecord.statement.push(postId)
+        } else {
+          this.likeRecord.statement.push(postId)
+        }
+      }
+
+      localStorage.setItem('likeRecord', JSON.stringify(this.likeRecord))
+    },
+    async likeNews(postId) {
+      return axiosClient.post(`/news/${postId}/like`).then((response) => {
+        if (response.status === 200) {
+          const post = this.activities.data.find((post) => post.id === postId)
+          if (post) {
+            post.likes += 1
+          }
+
+          this.addLikeRecord(postId, 'news')
+
+          return response
+        }
+      })
+    },
+    isPostLiked(postId) {
+      return this.likeRecord.news && this.likeRecord.news.includes(postId)
+    },
+    async updateStatement(statementId, updatedStatement) {
+      const formData = new FormData()
+      formData.append('_method', 'PUT')
+      Object.keys(updatedStatement).forEach((key) => {
+        if (
+          key === 'imageFiles' &&
+          Array.isArray(updatedStatement[key]) &&
+          updatedStatement[key][0] instanceof File
+        ) {
+          // Append the file directly
+          for (let i = 0; i < updatedStatement.imageFiles.length; i++) {
+            formData.append('images[]', updatedStatement.imageFiles[i])
+          }
+        } else if (key !== 'images') {
+          // Append other fields
+          formData.append(key, updatedStatement[key])
+        }
+      })
+
+      return axiosClient.post(`/statements/${statementId}`, formData).then((response) => {
+        if (response.status === 200) {
+          const index = this.statements.data.findIndex((statement) => statement.id === statementId)
+          if (index !== -1) {
+            this.statements.data[index] = { ...response.data }
+          }
+        }
+
+        return response
+      })
+    },
+    async createStatement(statement) {
+      const formData = new FormData()
+      formData.append('title', statement.title)
+      formData.append('date', statement.date)
+      formData.append('committee', statement.committee)
+      formData.append('statementNo', statement.statementNo)
+      formData.append('body', statement.body)
+
+      // Append image files
+      for (let i = 0; i < statement.imageFiles.length; i++) {
+        formData.append('images[]', statement.imageFiles[i])
+      }
+
+      return axiosClient.post('/statements', formData).then((response) => {
+        if (response.status === 201) {
+          this.statements.data.push(response.data)
         }
 
         return response

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="loading.show" class="flex justify-center items-center h-screen">
+    <div v-if="loading.state" class="flex justify-center items-center h-screen">
         <div class="flex flex-col items-center gap-4 bg-white px-6 py-4 rounded-lg shadow-lg">
             <svg class="animate-spin h-8 w-8 text-light-blue" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24">

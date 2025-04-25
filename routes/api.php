@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\StatementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,12 +21,22 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+// Statement routes
+Route::get('/statements', [StatementController::class, 'index'])->name('statements.index');
+Route::get('/statements/{statement}', [StatementController::class, 'show'])->name('statements.show');
 
 Route::post('/login', [AuthController::class, 'login']);
+
+// Comment routes
 Route::get('{type}/{id}/comments', [CommentController::class, 'index']);
 Route::post('{type}/{id}/comments', [CommentController::class, 'store']);
 
+// news routes
+Route::get('/news', [NewsController::class, 'index']); // List all news
+Route::get('/news/{news}', [NewsController::class, 'show']); // Show a single news item
+Route::post('/news/{news}/like', [NewsController::class, 'like']); // Like a news item
+
+// Protected routes for creating, updating, and deleting news
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -33,5 +44,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [AuthController::class, 'users']);
     Route::put('/users/{user}', [AuthController::class, 'updateUser']);
     Route::delete('/users/{user}', [AuthController::class, 'deleteUser']);
-    Route::Resource('news', NewsController::class);
+
+    // Protected routes for news
+    Route::post('/news', [NewsController::class, 'store']); // Create news
+    Route::put('/news/{news}', [NewsController::class, 'update']); // Update news
+    Route::delete('/news/{news}', [NewsController::class, 'destroy']); // Delete news
+
+    // Protected routes for statements
+    Route::post('/statements', [StatementController::class, 'store'])->name('statements.store');
+    Route::put('/statements/{statement}', [StatementController::class, 'update'])->name('statements.update');
+    Route::delete('/statements/{statement}', [StatementController::class, 'destroy'])->name('statements.destroy');
 });

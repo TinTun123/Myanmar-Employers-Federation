@@ -1,7 +1,9 @@
 <template>
+
   <!-- <LoadingComponent v-if="userStore.loading.show"></LoadingComponent> -->
   <div>
     <AdminTitleComponent :title="route.params.id ? 'Edit post' : 'Create post'"></AdminTitleComponent>
+
     <div class="mt-6 mx-6 md:mx-[48px] flex flex-col gap-4">
       <div class="flex flex-col gap-4 md:w-[60%]">
         <div class="border-l-4 border-secondary-red pl-2">
@@ -122,7 +124,6 @@ function saveOrUpdatePost() {
     })
   } else {
     newsStore.createPost(model.value).then((response) => {
-      console.log('response from editNews', response);
 
       if (response.status === 201) {
         userStore.setNotification({
@@ -143,7 +144,6 @@ function openFileSelector() {
 
 function onFileSelected(event) {
   const file = event.target.files[0]
-  // console.log('file', file);
 
   if (file) {
     const reader = new FileReader()
@@ -153,8 +153,9 @@ function onFileSelected(event) {
 
     model.value.imgFile = file;
     reader.readAsDataURL(file)
-    // console.log("imgFile", model.value.imgFile);
 
   }
 }
+
+
 </script>

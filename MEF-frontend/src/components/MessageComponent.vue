@@ -19,17 +19,18 @@
                 <div class="rounded-full h-2 w-2 bg-[#808080]">
 
                 </div>
-                <h1 class="text-xs font-semibold">{{ formatDistanceToNow(comment.date) }}</h1>
+                <h1 class="text-xs font-semibold">{{ comment.created_at }}</h1>
             </div>
             <!-- Comment text -->
             <div>
                 <p class="text-sm leading-7">
-                    {{ comment.comment }}
+                    {{ comment.body }}
                 </p>
             </div>
         </div>
 
     </div>
+
 </template>
 
 <script setup>
@@ -41,4 +42,5 @@ const props = defineProps({
         required: true
     }
 })
+
 </script>

@@ -10,7 +10,7 @@ export const useUserStore = defineStore('users', {
       type: null,
     },
     loading: {
-      state: true,
+      state: false,
       message: 'Loading...',
     },
     popUp: {
@@ -89,9 +89,7 @@ export const useUserStore = defineStore('users', {
         console.log('Logout response:', response)
         if (response.status === 200) {
           this.user.token = null
-          localStorage.removeItem('token')
-          localStorage.removeItem('username')
-          this.username = null
+          localStorage.removeItem('user')
         }
         return response
       })

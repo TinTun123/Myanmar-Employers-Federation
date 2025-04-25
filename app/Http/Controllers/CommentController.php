@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -20,17 +21,18 @@ class CommentController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'body' => 'required|string|max:1000',
+            'comment' => 'required|string|max:3000',
         ]);
 
         $model = $this->getModelClass($type)::findOrFail($id);
 
         $comment = $model->comments()->create([
             'name' => $request->name,
-            'body' => $request->body,
+            'body' => $request->comment,
         ]);
 
-        return response()->json($comment, 201);
+        return new CommentResource($comment);
+        // return response()->json($comment, 201);
     }
 
     // Helper method to get model class based on type

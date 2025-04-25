@@ -18,7 +18,7 @@ class NewsController extends Controller
     public function index()
     {
         // Retrieve paginated news records
-        $news = News::latest()->paginate(10);
+        $news = News::with('comments')->latest()->paginate(10);
 
         // Return the paginated news as a resource collection
         return NewsResource::collection($news);
@@ -92,5 +92,13 @@ class NewsController extends Controller
         $news->delete();
 
         return response()->json(['message' => 'News deleted successfully'], 200);
+    }
+
+    public function like(Request $request, News $news)
+    {
+        // Increment the likes field
+        $news->increment('likes');
+
+        return response()->json(['message' => 'News liked successfully'], 200);
     }
 }

@@ -18,10 +18,11 @@ class NewsResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'body' => $this->body,
-            'publish_date' => $this->publish_date->format('Y-m-d'),
+            'publish_date' => $this->publish_date->format('d M Y'),
             'likes' => $this->likes,
             'image' => url($this->image),
             'slug' => $this->slug,
+            'comments' => CommentResource::collection($this->whenLoaded('comments')) ?? [],
         ];
     }
 }

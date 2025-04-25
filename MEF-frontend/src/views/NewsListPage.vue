@@ -1,4 +1,5 @@
 <template>
+
     <div>
         <ConeBgCover>
             <!-- <TopNews v-if="deviceType !== 'desktop'">
@@ -16,8 +17,8 @@
             </div>
             <!-- Navi text end -->
         </div>
-
-        <div class="grid grid-cols-12 gap-4 mt-4 mx-4 lg:mx-[90px]">
+        <LoadingComponent v-if="userStore.loading.state"></LoadingComponent>
+        <div v-else class="grid grid-cols-12 gap-4 mt-4 mx-4 lg:mx-[90px]">
             <NewsCard v-for="(post, index) in news" @click="goTo(post.id)" :key="index"
                 class="col-span-12 md:col-span-4" :class="colSpans[index]" :post="post" :index="index">
             </NewsCard>
@@ -27,11 +28,13 @@
 
 <script setup>
 import ConeBgCover from '@/components/ConeBgCover.vue';
+import LoadingComponent from '@/components/LoadingComponent.vue';
 import NewsCard from '@/components/NewsCard.vue';
 import TopNews from '@/components/TopNews.vue';
 import { useDeviceType } from '@/composables/useDeviceType';
 import { useGetCurrentPageName } from '@/composables/useGetCurrentPage';
 import { useNewsStore } from '@/stores/newsStore';
+import { useUserStore } from '@/stores/userStore';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -39,16 +42,21 @@ const currentPageName = useGetCurrentPageName();
 const { deviceType } = useDeviceType();
 
 const newsStore = useNewsStore();
+const userStore = useUserStore();
 const router = useRouter();
 
 const news = computed(() => {
-    if (newsStore.activities.data?.length > 0) {
+
+    if (newsStore.activities.data.length > 0) {
         return newsStore.activities.data;
     } else {
+        userStore.loading.state = true;
         newsStore.fetchPosts().then(() => {
+            userStore.loading.state = false;
             return newsStore.activities.data;
         })
     }
+
 });
 
 const colSpans = computed(() => {

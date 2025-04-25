@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+
 import { useNewsStore } from '@/stores/newsStore';
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
@@ -31,7 +32,7 @@ const newsStore = useNewsStore();
 const router = useRouter();
 
 const news = computed(() => {
-    return newsStore.activities;
+    return newsStore.activities.data;
 })
 
 function goTo(id) {

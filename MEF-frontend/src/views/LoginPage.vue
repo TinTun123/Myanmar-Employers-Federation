@@ -28,9 +28,7 @@
                 <div>
                     <div class="flex items-center justify-between">
                         <label for="password" class="block text-sm/6 font-medium text-white">Password</label>
-                        <div class="text-sm">
-                            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
-                        </div>
+
                     </div>
                     <div class="mt-2">
                         <input v-model="model.password" type="password" name="password" id="password"
@@ -41,7 +39,7 @@
 
                 <div>
                     <button @click="login" type="submit"
-                        class="flex w-full justify-center rounded-md bg-[#A087F4] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        class="flex cursor-pointer active:bg-[#A087F4] transition w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         Sign in</button>
                 </div>
             </div>

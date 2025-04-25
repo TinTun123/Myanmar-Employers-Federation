@@ -1,5 +1,8 @@
 <template>
-    <div class="lg:grid lg:grid-cols-12 lg:gap-8 lg:mt-20 lg:mx-[90px] md:mt-[48px]">
+
+    <LoadingComponent v-if="userStore.loading.state"></LoadingComponent>
+
+    <div v-else class="lg:grid lg:grid-cols-12 lg:gap-8 lg:mt-20 lg:mx-[90px] md:mt-[48px]">
         <!-- Article session -->
         <div class="lg:col-span-8">
             <div>
@@ -19,20 +22,12 @@
                                     fill="#A7A7A7" />
                             </svg>
 
-                            <span class="text-sm md:text-base text-black font-timenew">{{ news.likes }}</span>
+                            <span class="text-sm md:text-base text-black font-timenew"> {{ news.comments?.length || 0
+                                }}</span>
 
                         </div>
 
-                        <div class="flex items-center gap-1">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M1.26967 1.47326C2.08154 0.529931 3.18253 0 4.33051 0C5.4785 0 6.57949 0.529931 7.39136 1.47326C7.5501 1.65709 7.75444 1.88587 8.00439 2.1596C8.25376 1.88587 8.45782 1.65709 8.61656 1.47326C9.42503 0.538009 10.5184 0.0113884 11.6591 0.0078378C12.7997 0.00428717 13.8955 0.524094 14.7083 1.4543C15.521 2.3845 15.9851 3.64992 15.9996 4.97558C16.0142 6.30123 15.578 7.57999 14.7859 8.53395L8.61569 15.7053C8.45332 15.894 8.23312 16 8.00353 16C7.77393 16 7.55373 15.894 7.39136 15.7053L1.22118 8.53496C0.429811 7.58636 -0.0087772 6.31403 0.000133157 4.99277C0.00904351 3.6715 0.465603 2.40733 1.26967 1.47326Z"
-                                    fill="#A7A7A7" />
-                            </svg>
-
-                            <span class="text-sm md:text-base text-black">{{ news.comments?.length || 0 }}</span>
-                        </div>
+                        <LikeComponent :news="news" @like-news="likeNews"></LikeComponent>
                     </div>
 
                     <div class="flex gap-1 items-center">
@@ -69,6 +64,8 @@
                 <div v-if="deviceType !== 'desktop'" class="flex justify-between mt-4 md:mt-6 px-4">
                     <!-- Icons buttons -->
                     <div class="flex gap-4">
+
+
                         <div class="flex items-center gap-1">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -77,20 +74,10 @@
                                     fill="#A7A7A7" />
                             </svg>
 
-                            <span class="text-sm md:text-base text-black font-timenew">{{ news.likes }}</span>
-
-                        </div>
-
-                        <div class="flex items-center gap-1">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M1.26967 1.47326C2.08154 0.529931 3.18253 0 4.33051 0C5.4785 0 6.57949 0.529931 7.39136 1.47326C7.5501 1.65709 7.75444 1.88587 8.00439 2.1596C8.25376 1.88587 8.45782 1.65709 8.61656 1.47326C9.42503 0.538009 10.5184 0.0113884 11.6591 0.0078378C12.7997 0.00428717 13.8955 0.524094 14.7083 1.4543C15.521 2.3845 15.9851 3.64992 15.9996 4.97558C16.0142 6.30123 15.578 7.57999 14.7859 8.53395L8.61569 15.7053C8.45332 15.894 8.23312 16 8.00353 16C7.77393 16 7.55373 15.894 7.39136 15.7053L1.22118 8.53496C0.429811 7.58636 -0.0087772 6.31403 0.000133157 4.99277C0.00904351 3.6715 0.465603 2.40733 1.26967 1.47326Z"
-                                    fill="#A7A7A7" />
-                            </svg>
-
                             <span class="text-sm md:text-base text-black">{{ news.comments?.length || 0 }}</span>
                         </div>
+
+                        <LikeComponent :news="news" @like-news="likeNews"></LikeComponent>
                     </div>
 
                     <div class="flex gap-1 items-center">
@@ -118,11 +105,8 @@
                     {{ news.body }}
                 </p>
             </div>
-
+            <CommentComponent :post="news"></CommentComponent>
         </div>
-
-        <!-- <CommentComponent :comments="comments" :post="news"></CommentComponent> -->
-
         <div class="my-4 lg:col-span-4 md:mx-[90px] lg:mx-0">
             <!-- Read more session -->
             <SeeMoreNews></SeeMoreNews>
@@ -134,41 +118,55 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { useNewsStore } from '@/stores/newsStore';
-import { computed, onMounted, onBeforeMount } from 'vue';
+import { computed, onMounted, onBeforeMount, ref, watch } from 'vue';
 import SeeMoreNews from '@/components/SeeMoreNews.vue';
 import { useDeviceType } from '@/composables/useDeviceType';
 import CommentComponent from '@/components/CommentComponent.vue';
+import { useUserStore } from '@/stores/userStore';
+import LikeComponent from '@/components/LikeComponent.vue';
+import LoadingComponent from '@/components/LoadingComponent.vue';
 
 const route = useRoute();
 const newsStore = useNewsStore();
+const userStore = useUserStore();
 const { deviceType } = useDeviceType();
 
-const news = computed(() => {
+const news = ref({});
+
+function fetchNewsById() {
     const newsId = route.params.id;
-    return newsStore.activities.data.find((post) => {
 
-
-        return post.id === parseInt(newsId);
-    })
-
-})
-
-onBeforeMount(() => {
-    if (!newsStore.activities.data.length) {
-        const newsId = route.params.id;
+    if (!newsStore.activities.data?.length) {
+        // Fetch posts if the store is empty
+        userStore.loading.state = true;
         newsStore.fetchPosts().then(() => {
-            return newsStore.activities.data.find((news) => {
-
-                return news.id === parseInt(newsId);
-            })
-        })
+            news.value = newsStore.activities.data.find((post) => post.id === parseInt(newsId));
+            userStore.loading.state = false;
+        });
+    } else {
+        // Find the news directly if the store already has data
+        news.value = newsStore.activities.data.find((post) => post.id === parseInt(newsId));
     }
+}
+
+onMounted(() => {
+
+    fetchNewsById();
 })
 
-// const comments = computed(() => {
-//     return newsStore.activities.data.find((news) => {
-//         return news.id === parseInt(route.params.id);
-//     }).comments;
-// })
+watch(() => route.params.id, (newId) => {
+    fetchNewsById();
+})
 
+function likeNews() {
+    newsStore.likeNews(news.value.id).then((response) => {
+        if (response.status === 200) {
+            userStore.setNotification({
+                type: 'success',
+                message: 'Like succeed!',
+            })
+        }
+
+    })
+}
 </script>

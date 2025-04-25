@@ -115,7 +115,7 @@ onMounted(() => {
 })
 
 async function deletePost(id) {
-  console.log('deletePost from ManageNews');
+
 
   const confirm = await userStore.showPopup({
     title: 'Delete Post',

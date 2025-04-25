@@ -21,7 +21,7 @@
         <!-- Button comment -->
         <div class="flex justify-end mt-4">
             <button @click="addComment" type="button"
-                class="flex items-center justify-between gap-2 text-xs font-semibold text-black/70 rounded-full px-4 py-2 bg-white shadow-lg border border-black/20">
+                class="flex items-center cursor-pointer hover:shadow-none active:shadow-none transition justify-between gap-2 text-xs font-semibold text-black/70 rounded-full px-4 py-2 bg-white shadow-lg border border-black/20">
                 <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M9 0.5009C4.0293 0.5009 1.49016e-06 4.53015 1.49016e-06 9.50078C-0.00076153 10.8268 0.291506 12.1366 0.855901 13.3365L0.0189014 17.4198C-0.0108985 17.5656 -0.00408263 17.7165 0.0387388 17.859C0.0815602 18.0015 0.159051 18.1312 0.264275 18.2364C0.369498 18.3416 0.499171 18.4191 0.641685 18.4619C0.784199 18.5048 0.935107 18.5116 1.0809 18.4818L5.1642 17.6448C6.3288 18.1938 7.6302 18.4998 9 18.4998C13.9707 18.4998 18 14.4714 18 9.49988C18 4.53015 13.9707 0.5 9 0.5"
@@ -34,7 +34,7 @@
     </div>
 
     <div class="flex flex-col gap-6 mx-4 my-6 md:mx-[90px] lg:mx-0">
-        <MessageComponent v-for="(commt, index) in comments" :key="commt.id" :comment="commt">
+        <MessageComponent v-for="(commt, index) in post.comments" :key="commt.id" :comment="commt">
         </MessageComponent>
     </div>
 
@@ -78,10 +78,6 @@ import { useUserStore } from '@/stores/userStore';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 const props = defineProps({
-    comments: {
-        type: Array,
-        required: true
-    },
     post: {
         type: Object,
         required: true
@@ -92,6 +88,7 @@ const localComment = ref('');
 const nickname = ref('');
 const showModal = ref(false);
 const userStore = useUserStore();
+const newsStore = useNewsStore();
 const route = useRoute();
 
 function saveNickName() {
@@ -101,31 +98,59 @@ function saveNickName() {
         showModal.value = false;
         addComment();
     } else {
-        alert('Please enter your nickname!');
+        userStore.setNotification({
+            type: 'error',
+            message: 'Please enter your nickname to comment!',
+            duration: 3000 // Duration in milliseconds
+        });;
     }
 }
 
-onMounted(() => {
-    console.log(userStore.username);
-
-})
-
 function addComment() {
-    console.log(userStore.username);
-
     if (!userStore.username) {
         showModal.value = true;
         return;
     }
 
     if (!localComment.value) {
-        alert('Please enter your comment!');
+        userStore.setNotification({
+            type: 'error',
+            message: 'Please enter your comment!',
+            duration: 3000 // Duration in milliseconds
+        });
         return;
     }
 
-    let path = route.name;
-    console.log(props.post.id, path, localComment.value, userStore.username);
+    newsStore.addComment('news', props.post.id, localComment.value, userStore.username).then((response) => {
+        if (response.status === 201) {
+            localComment.value = '';
+            userStore.setNotification({
+                type: 'success',
+                message: 'Comment added!',
+                duration: 3000 // Duration in milliseconds
+            });
+        }
+    }).catch((error) => {
+        userStore.setNotification({
+            type: 'error',
+            message: 'Error adding comment!',
+            duration: 3000 // Duration in milliseconds
+        });
+    })
 
     // Sent comment to backend
 }
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease-in-out;
+    /* Adjust duration and easing */
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>
