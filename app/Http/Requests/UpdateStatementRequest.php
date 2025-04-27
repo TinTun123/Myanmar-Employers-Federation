@@ -25,10 +25,11 @@ class UpdateStatementRequest extends FormRequest
         return [
             'title' => 'sometimes|required|string|max:255',
             'committee' => 'sometimes|required|string|max:255',
-            'statementNo' => 'sometimes|required|string|max:800',
+            'statement_no' => 'sometimes|required|string|max:800',
             'body' => 'sometimes|required|string',
             'date' => 'sometimes|required|date',
             'images' => 'nullable|array',
+            'imagesURL' => 'nullable|array',
         ];
     }
 }

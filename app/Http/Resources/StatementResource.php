@@ -19,7 +19,7 @@ class StatementResource extends JsonResource
             'title' => $this->title,
             'date' => $this->date->format('d M Y'),
             'committee' => $this->committee,
-            'statementNo' => $this->statementNo,
+            'statement_no' => $this->statement_no,
             'body' => $this->body,
             'images' => collect($this->images)->map(fn($path) => url($path)),
             'created_at' => $this->created_at,

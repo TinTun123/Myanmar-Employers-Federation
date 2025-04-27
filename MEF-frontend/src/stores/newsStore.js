@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { axiosClient } from '@/axios'
+import { useUserStore } from './userStore'
 
 export const useNewsStore = defineStore('news', {
   state: () => ({
@@ -22,7 +23,10 @@ export const useNewsStore = defineStore('news', {
       })
     },
     async fetchStatements() {
+      const userStore = useUserStore()
+      userStore.loading.state = true
       return axiosClient.get('/statements').then((response) => {
+        userStore.loading.state = false
         this.statements = response.data
 
         return response
@@ -156,8 +160,14 @@ export const useNewsStore = defineStore('news', {
           for (let i = 0; i < updatedStatement.imageFiles.length; i++) {
             formData.append('images[]', updatedStatement.imageFiles[i])
           }
-        } else if (key !== 'images') {
-          // Append other fields
+        } else if (key === 'images') {
+          // Append images fields
+          updatedStatement[key].forEach((image) => {
+            if (image.startsWith('http')) {
+              formData.append('imagesURL[]', image)
+            }
+          })
+        } else {
           formData.append(key, updatedStatement[key])
         }
       })
@@ -191,6 +201,16 @@ export const useNewsStore = defineStore('news', {
           this.statements.data.push(response.data)
         }
 
+        return response
+      })
+    },
+    async deleteStatement(statementId) {
+      return axiosClient.delete(`/statements/${statementId}`).then((response) => {
+        if (response.status === 200) {
+          this.statements.data = this.statements.data.filter(
+            (statement) => statement.id !== statementId,
+          )
+        }
         return response
       })
     },

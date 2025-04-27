@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateStatementRequest;
 use App\Http\Resources\StatementResource;
 use App\Models\Statement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class StatementController extends Controller
@@ -23,7 +24,6 @@ class StatementController extends Controller
         $validated = $request->validated();
 
         $statement = Statement::create($validated);
-
         // Process images
         $imageUrls = [];
         if ($request->hasFile('images')) {
@@ -53,30 +53,41 @@ class StatementController extends Controller
         $statement->update([
             'title' => $validated['title'] ?? $statement->title,
             'committee' => $validated['committee'] ?? $statement->committee,
-            'statementNo' => $validated['statementNo'] ?? $statement->statementNo,
+            'statement_no' => $validated['statement_no'] ?? $statement->statementNo,
             'body' => $validated['body'] ?? $statement->body,
             'date' => $validated['date'] ?? $statement->date,
         ]);
 
-        // Handle existing image URLs
-        $newImageUrls = [];
+        $existingImages = $statement->images ?? []; // Current images in DB
+        $incomingImages = $validated['imagesURL'] ?? []; // Images kept by admin
+        $folderPath = "public/statements/{$statement->id}";
 
-        // Check if 'images' field is present and contains uploaded files
+        // Clean up: delete any image that was removed by admin
+        foreach ($existingImages as $imagePath) {
+            $imagetransformed = url($imagePath);
+            Log::info("ImagePath: $imagetransformed");
+            Log::info("incomingImages: ", $incomingImages);
+            if (!in_array($imagetransformed, $incomingImages)) {
+                // Convert the URL to the storage path
+                $relativePath = str_replace('/storage/', 'public/', parse_url($imagePath, PHP_URL_PATH));
+                Storage::delete($relativePath);
+            }
+        }
+
+        $newImageUrls = $incomingImages;
+
+        // Upload new images if any
         if ($request->hasFile('images')) {
-            // Remove existing folder and files
-            $folderPath = "public/statements/{$statement->id}";
-            Storage::deleteDirectory($folderPath);
 
-            // Store new files
             foreach ($request->file('images') as $image) {
                 $path = $image->storeAs($folderPath, $image->getClientOriginalName());
-                $newImageUrls[] = Storage::url($path); // Public URL
+                $newImageUrls[] = Storage::url($path);
             }
-
-            // Update the statement's image paths
-            $statement->images = $newImageUrls;
-            $statement->save();
         }
+
+        // Save the merged list (existing + new)
+        $statement->images = $newImageUrls;
+        $statement->save();
 
         return new StatementResource($statement);
     }
@@ -85,6 +96,6 @@ class StatementController extends Controller
     {
         $statement->delete();
 
-        return response()->json(['message' => 'Statement deleted successfully.']);
+        return response()->json(['message' => 'Statement deleted successfully.'], 200);
     }
 }

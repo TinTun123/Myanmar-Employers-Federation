@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\StatementController;
 use Illuminate\Http\Request;
@@ -54,4 +55,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/statements', [StatementController::class, 'store'])->name('statements.store');
     Route::put('/statements/{statement}', [StatementController::class, 'update'])->name('statements.update');
     Route::delete('/statements/{statement}', [StatementController::class, 'destroy'])->name('statements.destroy');
+
+    // Protected routes for Form
+    Route::post('/forms', [FormController::class, 'store'])->name('forms.store');
+    Route::get('/forms', [FormController::class, 'index'])->name('forms.index');
+    Route::delete('/forms/{form}', [FormController::class, 'destroy']);
+    Route::put('/forms/{form}', [FormController::class, 'update'])->name('forms.update');
 });

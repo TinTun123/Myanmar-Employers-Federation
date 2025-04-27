@@ -11,13 +11,13 @@
         placeholder="Enter title" />
     </div>
 
-    <div class="flex flex-col gap-4 md:w-[60%]">
-      <div class="border-l-2 border-secondary-red pl-2">
+    <div class="flex flex-col items-end self-end gap-4 md:w-[60%]">
+      <div class="border-r-2 border-secondary-red pr-2 text-right">
         <label for="date" class="text-sm font-semibold">Publish date:</label>
       </div>
 
       <input v-model="model.date" type="date" id="date"
-        class="border self-start border-black/40 text-sm bg-white shadow-lg rounded-md px-4 py-2 leading-7 focus:outline-none focus:ring-2 focus:ring-light-blue focus:border-light-blue"
+        class="border self-end border-black/40 text-sm bg-white shadow-lg rounded-md px-4 py-2 leading-7 focus:outline-none focus:ring-2 focus:ring-light-blue focus:border-light-blue"
         placeholder="Select a date" />
     </div>
 
@@ -31,12 +31,12 @@
         placeholder="Enter committee name" />
     </div>
 
-    <div class="flex flex-col gap-4 md:w-[60%]">
-      <div class="border-l-2 border-secondary-red pl-2">
+    <div class="flex flex-col self-end gap-4 md:w-[60%] text-right">
+      <div class="border-r-2 border-secondary-red pr-2">
         <label for="StatementNo" class="text-sm font-semibold">Statement No:</label>
       </div>
 
-      <input v-model="model.statementNo" type="text"
+      <input v-model="model.statement_no" type="text"
         class="border border-black/40 text-sm bg-white shadow-lg rounded-md px-4 py-2 leading-7" id="StatementNo"
         placeholder="Enter Statement No" />
     </div>
@@ -120,7 +120,7 @@ const model = ref({
   title: '',
   date: new Date().toISOString().split('T')[0], // Set to current date in YYYY-MM-DD format
   committee: '',
-  statementNo: '',
+  statement_no: '',
   body: '',
   images: [],
   imageFiles: []
@@ -151,26 +151,6 @@ function fetchStatements() {
 
 }
 
-async function urlToFile(url) {
-  try {
-    console.log(url);
-
-    const response = await fetch(url, {
-      mode: 'no-cors',
-    });
-    const blob = await response.blob();
-    const fileType = blob.type; // Get the MIME type of the file
-
-    // Extract the file name from the URL
-    const fileName = url.split('/').pop(); // Get the last part of the URL
-
-    return new File([blob], fileName, { type: fileType });
-  } catch (error) {
-    console.error('Error converting URL to File:', error);
-    throw error;
-  }
-}
-
 function openFileSelector() {
   inputController.value.click()
 }
@@ -196,10 +176,7 @@ function onFileRemove(index) {
 
 function saveOrUpdateStatement() {
   if (route.params.id) {
-    let existingImage = model.value.images.map((image) => {
-      return urlToFile(image)
-    })
-    model.value.imageFiles = [...model.value.imageFiles, ...existingImage]
+
 
     newsStore.updateStatement(route.params.id, model.value).then((response) => {
       if (response.status === 200) {
