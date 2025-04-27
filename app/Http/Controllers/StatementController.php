@@ -16,7 +16,8 @@ class StatementController extends Controller
     public function index()
     {
 
-        return StatementResource::collection(Statement::latest()->paginate(10));
+        $statements = Statement::with('comments')->latest()->get();
+        return StatementResource::collection($statements);
     }
 
     public function store(StoreStatementRequest $request)

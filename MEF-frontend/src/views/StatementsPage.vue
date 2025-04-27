@@ -19,27 +19,27 @@
         <div
             class="px-2 py-3 mx-6 rounded-lg bg-white shadow-lg border border-black/20 md:px-4 md:py-4 md:mx-0 md:col-start-2 md:col-span-7">
             <h1 class="text-sm font-semibold text-center mx-4">
-                {{ statement.title }}
+                {{ model.title }}
             </h1>
 
             <div class="flex justify-between items-center my-4">
-                <span class="text-black text-[10px] font-semibold">{{ statement.date }}</span>
-                <span class="text-black/70 text-[10px]">{{ statement.statementNo }}</span>
+                <span class="text-black text-[10px] font-semibold">{{ model.date }}</span>
+                <span class="text-black/70 text-[10px]">{{ model.statement_no }}</span>
             </div>
 
             <p class="text-xs text-black text-justify leading-6">
-                {{ statement.body }}
+                {{ model.body }}
             </p>
 
             <div class="text-right mt-4">
-                <span class="text-[10px] text-black font-medium">{{ statement.committee }}</span>
+                <span class="text-[10px] text-black font-medium">{{ model.committee }}</span>
             </div>
         </div>
 
         <!-- Statement images -->
         <div
             class="px-6 py-2 flex gap-4 overflow-y-auto mt-4 md:grid md:grid-cols-4 md:mt-0 md:p-0 md:col-start-9 md:col-span-3">
-            <div @click="showImageModal(image)" v-for="(image, index) in statement.image" :key="index"
+            <div @click="showImageModal(image)" v-for="(image, index) in model.images" :key="index"
                 class="flex-shrink-0 cursor-pointer col-span-2">
                 <img :src="image" class="w-[124px] hover:shadow-lg transition" alt="">
             </div>
@@ -49,7 +49,7 @@
 
     <div class="lg:grid lg:grid-cols-12 lg:mx-[90px]">
         <div class="lg:col-span-10 lg:col-start-2">
-            <CommentComponent :comments="statement.comments" :post="statement"></CommentComponent>
+            <CommentComponent :post="model"></CommentComponent>
         </div>
 
     </div>
@@ -83,13 +83,29 @@ import ConeBgCover from '@/components/ConeBgCover.vue';
 import StatementCard from '@/components/StatementCard.vue';
 import { useGetCurrentPageName } from '@/composables/useGetCurrentPage';
 import { useRoute, useRouter } from 'vue-router';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onBeforeMount } from 'vue';
 import { useNewsStore } from '@/stores/newsStore';
 import CommentComponent from '@/components/CommentComponent.vue';
 
 const currentPageName = useGetCurrentPageName();
 const route = useRoute();
 const newsStore = useNewsStore();
+
+const model = ref({
+    "id": '',
+    "title": "",
+    "date": null,
+    "committee": null,
+    "statement_no": null,
+    "body": null,
+    "images": [
+
+    ],
+    "created_at": "2025-04-25T02:42:30.000000Z",
+    "updated_at": "2025-04-26T10:30:45.000000Z",
+    "imageFiles": [],
+    "comments": [],
+})
 
 const showImage = ref({
     open: false,
@@ -108,22 +124,36 @@ function closeImageModal() {
     showImage.value.image = '';
 }
 
-const statement = computed(() => {
-    const statementId = parseInt(route.params.id) || null;
 
-    if (statementId) {
-        return newsStore.statements.find((statement) => statement.id === statementId);
-    } else {
-        return newsStore.statements[0];
-    }
-})
+const Morestatements = ref([])
 
-const Morestatements = computed(() => {
-    const statementId = parseInt(route.params.id) || null;
-    if (!statementId) {
-        return newsStore.statements;
+
+onMounted(() => {
+
+    if (newsStore.statements?.data?.length) {
+        if (route.params.id) {
+            model.value = newsStore.getStatementById(parseInt(route.params.id));
+        } else {
+            model.value = newsStore.statements.data[0];
+        }
+
+        Morestatements.value = newsStore.statements.data;
     } else {
-        return newsStore.statements.filter((statement) => statement.id !== statementId);
+        newsStore.fetchStatements().then(() => {
+
+            if (route.params.id) {
+                model.value = newsStore.getStatementById(parseInt(route.params.id));
+            } else {
+                model.value = newsStore.statements.data[0];
+            }
+
+            Morestatements.value = newsStore.statements.data;
+            console.log(newsStore.statements.data);
+
+            console.log(newsStore.getStatementById(parseInt(route.params.id)));
+
+        });
+
     }
 })
 </script>

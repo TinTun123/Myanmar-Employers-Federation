@@ -107,6 +107,8 @@ function saveNickName() {
 }
 
 function addComment() {
+
+
     if (!userStore.username) {
         showModal.value = true;
         return;
@@ -120,23 +122,43 @@ function addComment() {
         });
         return;
     }
-
-    newsStore.addComment('news', props.post.id, localComment.value, userStore.username).then((response) => {
-        if (response.status === 201) {
-            localComment.value = '';
+    if (route.name === 'statements') {
+        newsStore.addComment('statements', props.post.id, localComment.value, userStore.username).then((response) => {
+            if (response.status === 201) {
+                localComment.value = '';
+                userStore.setNotification({
+                    type: 'success',
+                    message: 'Comment added!',
+                    duration: 3000 // Duration in milliseconds
+                });
+            }
+        }).catch((error) => {
             userStore.setNotification({
-                type: 'success',
-                message: 'Comment added!',
+                type: 'error',
+                message: 'Error adding comment!',
                 duration: 3000 // Duration in milliseconds
             });
-        }
-    }).catch((error) => {
-        userStore.setNotification({
-            type: 'error',
-            message: 'Error adding comment!',
-            duration: 3000 // Duration in milliseconds
-        });
-    })
+        })
+    } else {
+
+        newsStore.addComment('news', props.post.id, localComment.value, userStore.username).then((response) => {
+            if (response.status === 201) {
+                localComment.value = '';
+                userStore.setNotification({
+                    type: 'success',
+                    message: 'Comment added!',
+                    duration: 3000 // Duration in milliseconds
+                });
+            }
+        }).catch((error) => {
+            userStore.setNotification({
+                type: 'error',
+                message: 'Error adding comment!',
+                duration: 3000 // Duration in milliseconds
+            });
+        })
+    }
+
 
     // Sent comment to backend
 }

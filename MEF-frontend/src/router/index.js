@@ -12,6 +12,7 @@ import ManageStatements from '@/views/Admin/ManageStatements.vue'
 import ManageUsers from '@/views/Admin/ManageUsers.vue'
 import Response from '@/views/Admin/Response.vue'
 import ComplainPage from '@/views/ComplainPage.vue'
+import FormAnswerPage from '@/views/FormAnswerPage.vue'
 import HomePage from '@/views/HomePage.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import NewsDeatilView from '@/views/NewsDeatilView.vue'
@@ -53,6 +54,11 @@ const router = createRouter({
           path: '/reports/',
           name: 'reports',
           component: ComplainPage,
+        },
+        {
+          path: '/reports/:id',
+          name: 'formAnswer',
+          component: FormAnswerPage,
         },
       ],
     },

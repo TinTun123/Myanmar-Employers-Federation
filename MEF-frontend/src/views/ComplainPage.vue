@@ -23,7 +23,7 @@
                     received so
                     far!</span>
 
-                <div class="text-center ">
+                <div @click="goTo('formAnswer')" class="text-center ">
                     <button
                         class="px-4 py-2 text-sm text-white bg-[#A087F4] rounded-full shadow-lg border border-[#A087F4] font-semibold">Report
                         violation</button>
@@ -370,10 +370,12 @@ import ConeBgCover from '@/components/ConeBgCover.vue';
 import { useDeviceType } from '@/composables/useDeviceType';
 import { useGetCurrentPageName } from '@/composables/useGetCurrentPage';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const scrollContainer = ref(null);
 const currentPageName = useGetCurrentPageName();
 const { deviceType } = useDeviceType();
+const router = useRouter();
 
 function scrollLeft() {
     if (scrollContainer.value) {
@@ -382,6 +384,10 @@ function scrollLeft() {
             behavior: 'smooth', // Enables smooth scrolling
         });
     }
+}
+
+function goTo(path) {
+    router.push({ name: path, params: { id: 1 } });
 }
 
 // Scroll right function

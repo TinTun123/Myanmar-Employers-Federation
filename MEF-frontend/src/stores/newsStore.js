@@ -24,9 +24,11 @@ export const useNewsStore = defineStore('news', {
     },
     async fetchStatements() {
       const userStore = useUserStore()
+
       userStore.loading.state = true
       return axiosClient.get('/statements').then((response) => {
         userStore.loading.state = false
+
         this.statements = response.data
 
         return response
@@ -37,7 +39,10 @@ export const useNewsStore = defineStore('news', {
       return this.activities.data.find((post) => post.id === postId)
     },
     getStatementById(statementId) {
-      return this.statements.data.find((statement) => statement.id === statementId)
+      let statemet = this.statements.data.find((statement) => statement.id === statementId)
+
+      console.log(statemet)
+      return statemet
     },
     async updatePost(postId, updatedPost) {
       const formData = new FormData()
@@ -99,12 +104,18 @@ export const useNewsStore = defineStore('news', {
       const formData = new FormData()
       formData.append('comment', comment)
       formData.append('name', name)
+      console.log(type)
 
       return axiosClient.post(`/${type}/${postId}/comments`, formData).then((response) => {
-        if (response.status === 201) {
+        if (response.status === 201 && type === 'news') {
           const post = this.activities.data.find((post) => post.id === postId)
           if (post) {
             post.comments.push(response.data.data)
+          }
+        } else if (response.status === 201 && type === 'statements') {
+          const statement = this.statements.data.find((statement) => statement.id === postId)
+          if (statement) {
+            statement.comments.push(response.data.data)
           }
         }
 

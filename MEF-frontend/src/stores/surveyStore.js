@@ -22,6 +22,16 @@ export const useSurveyStore = defineStore('survey', {
         return response
       })
     },
+    async getSurveyById(surveyId) {
+      const userStore = useUserStore()
+      userStore.loading.state = true
+      userStore.loading.message = 'Loading survey...'
+      return axiosClient.get(`/forms/${surveyId}`).then((response) => {
+        userStore.loading.state = false
+        userStore.loading.message = ''
+        return response.data.data
+      })
+    },
     async findSurveyById(surveyId) {
       if (!this.surveys.data.length) {
         await this.fetchSurveys()

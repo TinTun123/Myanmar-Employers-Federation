@@ -37,6 +37,9 @@ Route::get('/news', [NewsController::class, 'index']); // List all news
 Route::get('/news/{news}', [NewsController::class, 'show']); // Show a single news item
 Route::post('/news/{news}/like', [NewsController::class, 'like']); // Like a news item
 
+// Form routes
+Route::get('/forms/{form}', [FormController::class, 'show'])->name('forms.show');
+
 // Protected routes for creating, updating, and deleting news
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);

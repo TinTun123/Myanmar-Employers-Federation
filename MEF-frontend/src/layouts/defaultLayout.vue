@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <NavigationBar />
+        <NavigationBar v-if="route.name !== 'formAnswer'" />
         <RouterView />
     </div>
 

@@ -40,7 +40,7 @@ class CommentController extends Controller
     {
         $map = [
             'news' => \App\Models\News::class,
-            // 'statements' => \App\Models\Statement::class,
+            'statements' => \App\Models\Statement::class,
         ];
 
         $type = Str::lower($type);

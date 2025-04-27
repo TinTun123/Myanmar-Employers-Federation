@@ -24,7 +24,8 @@ class StatementResource extends JsonResource
             'images' => collect($this->images)->map(fn($path) => url($path)),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'imageFiles' => []
+            'imageFiles' => [],
+            'comments' => CommentResource::collection($this->whenLoaded('comments')) ?? [],
         ];
     }
 }
