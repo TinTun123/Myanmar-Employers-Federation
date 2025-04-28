@@ -131,10 +131,6 @@ onMounted(async () => {
       model.value.id_prefix_question.data = JSON.parse(model.value.id_prefix_question.data)
     }
 
-    console.log(model.value);
-
-
-
   } else {
     model.value.questions = [
 
@@ -148,6 +144,7 @@ function addQuestion(index) {
     question_text: '',
     type: 'text',
     description: '',
+    isOther: false,
     data: {
       options: [],
     },

@@ -26,7 +26,7 @@
             class="border border-black/40 text-sm bg-white shadow-lg rounded-md px-4 py-2 w-full" />
         </div>
         <div class="flex-2">
-          <input v-model="option.long_form" @input="updateModel" type="text" :id="'option_' + option.id"
+          <input v-model="option.text" @input="updateModel" type="text" :id="'option_' + option.id"
             class="border border-black/40 text-sm bg-white shadow-lg rounded-md px-4 py-2 w-full" />
         </div>
         <div @click.stop="removeOption(index)" class="cursor-pointer">
@@ -70,7 +70,7 @@ function addPrefixOption() {
   props.modelValue.data.options.push({
     id: uuidv4(),
     short_form: '',
-    long_form: '',
+    text: '',
   })
   updateModel()
 }

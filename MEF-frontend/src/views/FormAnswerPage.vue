@@ -1,7 +1,6 @@
 <template>
     <div
         class="bg-black min-h-screen pt-12 relative overflow-x-hidden bg-no-repeat bg-center bg-[url(../assets/bg-illustration.svg)] bg-cover">
-
         <div class="z-100 md:grid md:grid-cols-12 md:gap-4 md:space-y-8">
             <div
                 class="flex md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-3 gap-4 items-center rounded-r-lg bg-secondary-red px-4 py-2 w-[90%] md:w-auto">
@@ -64,92 +63,45 @@
                 </div>
             </div>
 
-            <FormProgressComponent class="md:col-start-3 md:col-span-5"></FormProgressComponent>
-
+            <FormProgressComponent class="md:col-start-3 md:col-span-5"
+                :progressData="{ 'total': totalQuestions, 'answered': answeredQuestions, 'percentage': progress }">
+            </FormProgressComponent>
+            <pre>
+                {{ my_error }}
+            </pre>
+            <pre class="text-white">
+                {{ model }}
+            </pre>
             <!-- Input session -->
-            <div class="mx-4 my-8 space-y-8 md:space-y-12 md:col-start-3 md:col-span-8">
-
-                <div class="space-y-2">
-                    <!-- Uppder flex -->
-                    <div class="flex justify-between items-end">
-
-                        <div class="flex items-start gap-1">
-                            <!-- No and Question text -->
-                            <span class="text-sm text-white font-semibold">0.</span>
-                            <h1 class="text-sm text-white font-semibold">တွေ့ကြုံခဲ့သော အပြစ်မှုအမျိုးအစားများ
-                                (တစ်ခုထက်ပို၍ ရွေးချယ်နိုင်သည်) <span class="text-base text-[#FF0000]">*</span>
-                            </h1>
-                        </div>
-
-                        <div>
-                            <!-- Pop description icon -->
-                            <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M8 1.5C9.85652 1.5 11.637 2.2375 12.9497 3.55025C14.2625 4.86301 15 6.64348 15 8.5C15 10.3565 14.2625 12.137 12.9497 13.4497C11.637 14.7625 9.85652 15.5 8 15.5C6.14348 15.5 4.36301 14.7625 3.05025 13.4497C1.7375 12.137 1 10.3565 1 8.5C1 6.64348 1.7375 4.86301 3.05025 3.55025C4.36301 2.2375 6.14348 1.5 8 1.5ZM8.371 4.492C7.557 4.492 6.919 4.723 6.446 5.185C5.962 5.647 5.731 6.285 5.731 7.099H6.985C6.985 6.637 7.073 6.274 7.26 6.021C7.469 5.713 7.81 5.57 8.294 5.57C8.668 5.57 8.965 5.669 9.174 5.878C9.372 6.087 9.482 6.373 9.482 6.736C9.482 7.011 9.383 7.275 9.185 7.517L9.053 7.671C8.338 8.309 7.909 8.771 7.766 9.068C7.612 9.365 7.546 9.728 7.546 10.146V10.3H8.811V10.146C8.811 9.882 8.866 9.651 8.976 9.431C9.075 9.233 9.218 9.046 9.416 8.881C9.944 8.419 10.263 8.122 10.362 8.012C10.626 7.66 10.769 7.209 10.769 6.659C10.769 5.988 10.549 5.46 10.109 5.075C9.669 4.679 9.086 4.492 8.371 4.492ZM8.173 10.839C7.94871 10.8329 7.73116 10.916 7.568 11.07C7.48744 11.1459 7.42413 11.2382 7.38238 11.3407C7.34063 11.4432 7.3214 11.5534 7.326 11.664C7.326 11.906 7.403 12.104 7.568 12.258C7.72994 12.4152 7.94734 12.5021 8.173 12.5C8.415 12.5 8.613 12.423 8.778 12.269C8.86027 12.1916 8.92531 12.0977 8.9689 11.9934C9.01249 11.8892 9.03365 11.777 9.031 11.664C9.03311 11.5537 9.01274 11.4442 8.97113 11.3421C8.92953 11.24 8.86756 11.1474 8.789 11.07C8.62159 10.9157 8.40058 10.8328 8.173 10.839Z"
-                                    fill="#00E0E9" />
-                            </svg>
-                        </div>
+            <div class="mx-4 my-8 space-y-8 md:space-y-12 md:col-start-3 md:col-span-8 min-h-[70vh]">
+                <TransitionGroup name="fade-horizontal">
+                    <div v-for="(question, index) in paginatedQuestions" :key="question.id">
+                        <AnswerComponent :index="index + currentPage * questionsPerPage" :question="question"
+                            v-model="answer[question.id]">
+                        </AnswerComponent>
                     </div>
-
-                    <div>
-                        <fieldset class="">
-                            <div class="space-y-2">
-                                <div class="flex items-center gap-2">
-                                    <input type="radio" id="option1-q2" name="relation_type_q2"
-                                        value="လုပ်အားခ မပေးချေမှု" v-model="selectedOptionQ2"
-                                        class="w-4 h-4 text-secondary-red border-gray-300 focus:ring-secondary-red" />
-                                    <label for="option1-q2" class="text-sm text-white">လုပ်အားခ မပေးချေမှု</label>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <input type="radio" id="option2-q2" name="relation_type_q2"
-                                        value="အကြမ်းဖက်မှု သို့မဟုတ် ကြောက်မက်ခြင်း" v-model="selectedOptionQ2"
-                                        class="w-4 h-4 text-secondary-red border-gray-300 focus:ring-secondary-red" />
-                                    <label for="option2-q2" class="text-sm text-white">အကြမ်းဖက်မှု သို့မဟုတ်
-                                        ကြောက်မက်ခြင်း</label>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <input type="radio" id="option3-q2" name="relation_type_q2"
-                                        value="အခွင့်အရေးဖီဆန်မှု" v-model="selectedOptionQ2"
-                                        class="w-4 h-4 text-secondary-red border-gray-300 focus:ring-secondary-red" />
-                                    <label for="option3-q2" class="text-sm text-white">အခွင့်အရေးဖီဆန်မှု</label>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <input type="radio" id="option4-q2" name="relation_type_q2"
-                                        value="အခြား (အသေးစိတ်ဖော်ပြပါ)" v-model="selectedOptionQ2"
-                                        class="w-4 h-4 text-secondary-red border-gray-300 focus:ring-secondary-red" />
-                                    <label for="option4-q2" class="text-sm text-white">အခြား (အသေးစိတ်ဖော်ပြပါ)</label>
-                                </div>
-                                <div v-if="selectedOptionQ2 === 'အခြား (အသေးစိတ်ဖော်ပြပါ)'" class="mt-2">
-                                    <input type="text" v-model="otherDetailsQ2" placeholder="အသေးစိတ်ဖော်ပြပါ"
-                                        class="w-full h-10 px-4 rounded-lg bg-[#EFF1F5] text-sm text-[#696969] border border-[#E5E7EB] focus:outline-none focus:border-[#00E0E9]" />
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-
-                <div v-for="(question, index) in model.questions" :key="index">
-                    <AnswerComponent :index="index" :question="question" v-model="answer[question.id]">
-                    </AnswerComponent>
-                </div>
-
+                </TransitionGroup>
             </div>
 
             <div class="md:col-start-1 md:col-span-6 mb-6">
                 <div class="flex justify-center items-center gap-4 text-sm">
-                    <div @click=""
+                    <div @click="prevPage"
                         class="bg-white border border-black/40 shadow-lg focus:shadow-none hover:shadow-none transition cursor-pointer rounded-lg px-8 py-2 flex items-center gap-1">
                         <h3>Cancel</h3>
                     </div>
-                    <div @click=""
+                    <div @click="(currentPage < totalPages - 1) ? nextPage() : submitAnswer()"
                         class="bg-light-blue text-white font-semibold border border-light-blue focus:shadow-none hover:shadow-none transition cursor-pointer shadow-lg rounded-lg px-8 py-2 flex items-center gap-1">
                         <h3>Next</h3>
                     </div>
                 </div>
             </div>
-
         </div>
+        <transition name="fade-horizontal" mode="out-in">
+            <div v-if="notification.visible"
+                class="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50">
+                {{ notification.message }}
+            </div>
+        </transition>
     </div>
 
 </template>
@@ -161,6 +113,8 @@ import { useSurveyStore } from '../stores/surveyStore.js'
 import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import AnswerComponent from '../components/AnswerComponent.vue'
+import { computed } from 'vue'
+import { toValue } from 'vue'
 
 const model = ref({
     title: '',
@@ -182,21 +136,71 @@ const model = ref({
     ],
 })
 
+const questionsPerPage = 3 // Number of questions per page
+const currentPage = ref(0) // Track the current page
+const totalPages = computed(() => Math.ceil(model.value.questions.length / questionsPerPage))
+
+// Paginated questions for the current page
+const paginatedQuestions = computed(() => {
+    const start = currentPage.value * questionsPerPage
+    const end = start + questionsPerPage
+    return model.value.questions.slice(start, end)
+})
+
+const answeredQuestions = computed(() => {
+    return Object.keys(answer.value).filter((key) => {
+        const value = answer.value[key];
+        if (typeof value === 'string') {
+            return value.trim() !== ''; // Check if the string is not empty
+        } else if (Array.isArray(value)) {
+            return value.length > 0; // Check if the array is not empty
+        }
+        return false; // Default case, not answered
+    }).length;
+});
+
+const totalQuestions = computed(() => {
+    return model.value.questions.length;
+});
+
+const progress = computed(() => {
+    let percent = Math.round((answeredQuestions.value / totalQuestions.value) * 100);
+    return percent > 100 ? 100 : percent;
+});
+
+// Navigation functions
+const nextPage = () => {
+    if (!validateRequiredFields()) {
+        showNotification('Please fill in all required fields before proceeding.');
+        return;
+    }
+
+    if (currentPage.value < totalPages.value - 1) {
+        currentPage.value++
+    }
+}
+
+const prevPage = () => {
+    if (currentPage.value > 0) {
+        currentPage.value--
+    }
+}
 
 const answer = ref({
-    question_id: 0,
-    answer: ''
 })
 
 const surveyStore = useSurveyStore();
 const route = useRoute()
+const my_error = ref('')
 
 onMounted(() => {
     let id = route.params.id;
     surveyStore.getSurveyById(id).then((response) => {
         model.value = response;
+        model.value.questions.unshift(model.value.id_prefix_question)
     }).catch((error) => {
         console.log(error);
+        my_error.value = error.response.data.message;
     })
 
 })
@@ -208,4 +212,87 @@ const selectedCheckboxes = ref([])
 const selectedOptionQ2 = ref('')
 const otherDetailsQ2 = ref('')
 
+
+function submitAnswer() {
+    let pre_answer = {};
+    pre_answer = JSON.parse(JSON.stringify(answer.value));
+
+    Object.keys(pre_answer).forEach((key) => {
+        const index = model.value.questions.findIndex((q) => {
+            return q.id === parseInt(key);
+        });
+        if (index !== -1) {
+            pre_answer[key] = {
+                'type': model.value.questions[index].type,
+                'content': answer.value[key],
+                'is_prefixed': model.value.questions[index].is_prefixed,
+                'form_version_id': model.value.form_version_id
+            }
+        }
+    })
+    console.log(pre_answer);
+
+    const payload = {
+        'survey_id': model.value.id,
+        'version': model.value.version,
+        'answers': pre_answer,
+        'form_version_id': model.value.form_version_id,
+    }
+
+    surveyStore.submitAnswer(payload.survey_id, payload).then((response) => {
+        console.log(response);
+        showNotification('Answer submitted successfully!');
+    }).catch((error) => {
+        console.log(error);
+        showNotification('Failed to submit answer. Please try again.');
+    })
+
+}
+
+const notification = ref({
+    visible: false,
+    message: '',
+});
+
+const showNotification = (message) => {
+    notification.value.message = message;
+    notification.value.visible = true;
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.value.visible = false;
+    }, 3000);
+};
+
+const validateRequiredFields = () => {
+    const currentQuestions = paginatedQuestions.value;
+
+    for (const question of currentQuestions) {
+        if (question.is_required && (!answer.value[question.id] || answer.value[question.id].trim() === '')) {
+            return false; // A required field is not filled
+        }
+    }
+
+    return true; // All required fields are filled
+};
+
 </script>
+
+<style scoped>
+.fade-horizontal-enter-active {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.fade-horizontal-leave-active {
+    opacity: 0;
+}
+
+.fade-horizontal-enter-from {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.fade-horizontal-leave-to {
+    opacity: 0;
+}
+</style>

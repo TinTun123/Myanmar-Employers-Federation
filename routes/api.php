@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FormController;
@@ -39,6 +40,7 @@ Route::post('/news/{news}/like', [NewsController::class, 'like']); // Like a new
 
 // Form routes
 Route::get('/forms/{form}', [FormController::class, 'show'])->name('forms.show');
+Route::post('/forms/{form}/answers', [AnswerController::class, 'store'])->name('answer.store');
 
 // Protected routes for creating, updating, and deleting news
 Route::middleware('auth:sanctum')->group(function () {

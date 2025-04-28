@@ -1,0 +1,14 @@
+answers : {
+    165 : {type: 'text', content: 'test answer ', is_prefixed: 0}
+    166 : {type: 'text', content: 'test answer ', is_prefixed: 0}
+    167 : {type: 'text', content: 'test answer q4', is_prefixed: 0}
+    168 : {type: 'checkbox', content: Proxy(Array), is_prefixed: 0}
+    169 : {type: 'textarea', content: 'test answer ', is_prefixed: 0}
+    170 : {type: 'file', content: [File Object, File Object], is_prefixed: 0}
+    171 : {type: 'text', content: 'test answer ', is_prefixed: 0}
+    172 : {type: 'textarea', content: 'test answer q9', is_prefixed: 0}
+    173 : {type: 'radio', content: 'စီးပွားရေးအထောက်အပံ့ပေးနေသည်', is_prefixed: 0},
+    174 :  {type: 'radio', content: 'One', is_prefixed: 1},
+}
+survey_id : 29,
+version : 14,

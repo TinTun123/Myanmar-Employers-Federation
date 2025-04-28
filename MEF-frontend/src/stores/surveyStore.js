@@ -41,6 +41,42 @@ export const useSurveyStore = defineStore('survey', {
       })
       return model
     },
+    async submitAnswer(surveyId, answers) {
+      const formData = new FormData()
+
+      formData.append('survey_id', answers.survey_id)
+      formData.append('version', answers.version)
+      formData.append('form_version_id', answers.form_version_id)
+      // Answers need special handling
+      for (const [questionId, answer] of Object.entries(answers.answers)) {
+        formData.append(`answers[${questionId}][type]`, answer.type)
+        formData.append(`answers[${questionId}][is_prefixed]`, answer.is_prefixed)
+
+        if (answer.type === 'file') {
+          // Append multiple files
+          for (let i = 0; i < answer.content.length; i++) {
+            console.log(answer.content[i])
+
+            formData.append(`answers[${questionId}][content][${i}]`, answer.content[i])
+          }
+        } else if (answer.type === 'checkbox') {
+          // Append multiple checkboxes
+          for (let i = 0; i < answer.content.length; i++) {
+            formData.append(`answers[${questionId}][content][${i}]`, answer.content[i])
+          }
+        } else {
+          formData.append(`answers[${questionId}][content]`, answer.content)
+        }
+      }
+
+      console.log('FormData', formData)
+
+      return axiosClient.post(`/forms/${surveyId}/answers`, formData).then((response) => {
+        console.log(response.data)
+
+        return response.data.data
+      })
+    },
     async createSurvey(survey) {
       const formData = new FormData()
 

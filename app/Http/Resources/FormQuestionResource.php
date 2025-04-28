@@ -20,6 +20,7 @@ class FormQuestionResource extends JsonResource
             'type' => $this->type,
             'description' => $this->description,
             'is_required' => $this->is_required,
+            'is_prefixed' => $this->is_prefixed,
             'data' => $this->data,
         ];
     }

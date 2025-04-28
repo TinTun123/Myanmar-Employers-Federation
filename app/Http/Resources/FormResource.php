@@ -30,6 +30,7 @@ class FormResource extends JsonResource
                 $this->latestFormVersion?->questions->where('is_prefixed', true)->first()
             ),
             'version' => $this->latestFormVersion->version ?? 1,
+            'form_version_id' => $this->latestFormVersion->id
         ];
     }
 }

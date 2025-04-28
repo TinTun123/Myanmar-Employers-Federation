@@ -1,29 +1,42 @@
 <template>
-    <!-- Text type -->
-    <div v-if="question.type === 'text'" class="space-y-2">
-        <!-- Uppder flex -->
-        <div class="flex justify-between items-center">
 
-            <div class="flex items-center gap-1">
-                <!-- No and Question text -->
-                <span class="text-sm text-white font-semibold">{{ index + 1 }}.</span>
-                <h1 class="text-sm text-white font-semibold">{{ question.question_text }} <span
-                        class="text-base text-[#FF0000]">*</span>
-                </h1>
-            </div>
+    <!-- Uppder flex -->
+    <div class="flex justify-between items-center mb-4">
 
-            <div>
-                <!-- Pop description icon -->
+        <div class="flex items-center gap-1">
+            <!-- No and Question text -->
+            <span class="text-sm text-white font-semibold">{{ index + 1 }}.</span>
+            <h1 class="text-sm text-white font-semibold">{{ question.question_text }} <span v-if="question.is_required"
+                    class="text-base text-[#FF0000]">*</span>
+            </h1>
+        </div>
+
+        <div v-if="!question.is_prefixed" class="relative">
+            <!-- Question Icon -->
+            <div @click="toggleDescription" class="cursor-pointer">
                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M8 1.5C9.85652 1.5 11.637 2.2375 12.9497 3.55025C14.2625 4.86301 15 6.64348 15 8.5C15 10.3565 14.2625 12.137 12.9497 13.4497C11.637 14.7625 9.85652 15.5 8 15.5C6.14348 15.5 4.36301 14.7625 3.05025 13.4497C1.7375 12.137 1 10.3565 1 8.5C1 6.64348 1.7375 4.86301 3.05025 3.55025C4.36301 2.2375 6.14348 1.5 8 1.5ZM8.371 4.492C7.557 4.492 6.919 4.723 6.446 5.185C5.962 5.647 5.731 6.285 5.731 7.099H6.985C6.985 6.637 7.073 6.274 7.26 6.021C7.469 5.713 7.81 5.57 8.294 5.57C8.668 5.57 8.965 5.669 9.174 5.878C9.372 6.087 9.482 6.373 9.482 6.736C9.482 7.011 9.383 7.275 9.185 7.517L9.053 7.671C8.338 8.309 7.909 8.771 7.766 9.068C7.612 9.365 7.546 9.728 7.546 10.146V10.3H8.811V10.146C8.811 9.882 8.866 9.651 8.976 9.431C9.075 9.233 9.218 9.046 9.416 8.881C9.944 8.419 10.263 8.122 10.362 8.012C10.626 7.66 10.769 7.209 10.769 6.659C10.769 5.988 10.549 5.46 10.109 5.075C9.669 4.679 9.086 4.492 8.371 4.492ZM8.173 10.839C7.94871 10.8329 7.73116 10.916 7.568 11.07C7.48744 11.1459 7.42413 11.2382 7.38238 11.3407C7.34063 11.4432 7.3214 11.5534 7.326 11.664C7.326 11.906 7.403 12.104 7.568 12.258C7.72994 12.4152 7.94734 12.5021 8.173 12.5C8.415 12.5 8.613 12.423 8.778 12.269C8.86027 12.1916 8.92531 12.0977 8.9689 11.9934C9.01249 11.8892 9.03365 11.777 9.031 11.664C9.03311 11.5537 9.01274 11.4442 8.97113 11.3421C8.92953 11.24 8.86756 11.1474 8.789 11.07C8.62159 10.9157 8.40058 10.8328 8.173 10.839Z"
                         fill="#00E0E9" />
                 </svg>
             </div>
-        </div>
 
+            <!-- Description Box -->
+            <transition name="fade">
+                <div v-if="showDescription"
+                    class="absolute top-[-100%] leading-5 right-0 bg-white text-black text-xs p-2 rounded-lg shadow-lg w-64 z-10"
+                    @click.stop>
+                    {{ question.description }}
+                </div>
+            </transition>
+        </div>
+    </div>
+
+    <!-- Text type -->
+    <div v-if="question.type === 'text'" class="space-y-2">
         <div>
-            <input type="text" :value="modelValue" @input="emits('update:modelValue', $event.target.value)"
+            <input type="text" :id="'question_' + question.id" :name="'question_' + question.id" :value="modelValue"
+                @input="emits('update:modelValue', $event.target.value)"
                 class="w-full h-10 px-4 rounded-lg bg-[#EFF1F5] text-sm text-[#696969] border border-[#E5E7EB] focus:outline-none focus:border-[#00E0E9]"
                 placeholder="Enter text" />
         </div>
@@ -32,49 +45,28 @@
 
     <!-- Radio type -->
     <div v-if="question.type === 'radio'" class="space-y-2">
-        <!-- Uppder flex -->
-        <div class="flex justify-between items-end">
-
-            <span class="text-sm text-white font-semibold">{{ index + 1 }}.</span>
-            <h1 class="text-sm text-white font-semibold">{{ question.question_text }} <span
-                    class="text-base text-[#FF0000]">*</span>
-            </h1>
-
-            <div>
-                <!-- Pop description icon -->
-                <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M8 1.5C9.85652 1.5 11.637 2.2375 12.9497 3.55025C14.2625 4.86301 15 6.64348 15 8.5C15 10.3565 14.2625 12.137 12.9497 13.4497C11.637 14.7625 9.85652 15.5 8 15.5C6.14348 15.5 4.36301 14.7625 3.05025 13.4497C1.7375 12.137 1 10.3565 1 8.5C1 6.64348 1.7375 4.86301 3.05025 3.55025C4.36301 2.2375 6.14348 1.5 8 1.5ZM8.371 4.492C7.557 4.492 6.919 4.723 6.446 5.185C5.962 5.647 5.731 6.285 5.731 7.099H6.985C6.985 6.637 7.073 6.274 7.26 6.021C7.469 5.713 7.81 5.57 8.294 5.57C8.668 5.57 8.965 5.669 9.174 5.878C9.372 6.087 9.482 6.373 9.482 6.736C9.482 7.011 9.383 7.275 9.185 7.517L9.053 7.671C8.338 8.309 7.909 8.771 7.766 9.068C7.612 9.365 7.546 9.728 7.546 10.146V10.3H8.811V10.146C8.811 9.882 8.866 9.651 8.976 9.431C9.075 9.233 9.218 9.046 9.416 8.881C9.944 8.419 10.263 8.122 10.362 8.012C10.626 7.66 10.769 7.209 10.769 6.659C10.769 5.988 10.549 5.46 10.109 5.075C9.669 4.679 9.086 4.492 8.371 4.492ZM8.173 10.839C7.94871 10.8329 7.73116 10.916 7.568 11.07C7.48744 11.1459 7.42413 11.2382 7.38238 11.3407C7.34063 11.4432 7.3214 11.5534 7.326 11.664C7.326 11.906 7.403 12.104 7.568 12.258C7.72994 12.4152 7.94734 12.5021 8.173 12.5C8.415 12.5 8.613 12.423 8.778 12.269C8.86027 12.1916 8.92531 12.0977 8.9689 11.9934C9.01249 11.8892 9.03365 11.777 9.031 11.664C9.03311 11.5537 9.01274 11.4442 8.97113 11.3421C8.92953 11.24 8.86756 11.1474 8.789 11.07C8.62159 10.9157 8.40058 10.8328 8.173 10.839Z"
-                        fill="#00E0E9" />
-                </svg>
-            </div>
-        </div>
-
         <div>
             <fieldset class="space-y-2">
-
-
                 <div v-for="(option, i) in JSON.parse(question.data).options" :key="i" class="flex items-center gap-2">
                     <input type="radio" :id="option.uuid" :name="'question_' + question.id" :value="option.text"
-                        @change="emits('update:modelValue', $event.target.value)"
+                        v-model="selectedOption" :checked="modelValue === option.text" :key="option.uuid"
+                        @change="emits('update:modelValue', selectedOption)"
                         class="w-4 h-4 text-secondary-red border-gray-300 focus:ring-secondary-red" />
                     <label :for="option.uuid" class="text-sm text-white">{{ option.text
                     }}</label>
-
+                </div>
+                <div v-if="JSON.parse(question.data).other_option">
                     <!-- Other option -->
-                    <input type="radio" :id="'other_' + option.uuid" :name="'question_' + question.id" value="other"
+                    <input type="radio" :id="'other_' + question.id" :name="'question_' + question.id"
+                        v-model="selectedOption" value="other" placeholder="Enter text"
                         class="w-4 h-4 text-secondary-red border-gray-300 focus:ring-secondary-red" />
-                    <label :for="'other_' + option.uuid" class="text-sm text-white">အခြား</label>
-
-                    <div v-if="option.text === 'အခြား'" class="mt-2">
-                        <input type="text" v-model="option.text" placeholder="အသေးစိတ်ဖော်ပြပါ"
-                            @change="emits('update:modelValue', $event.target.value)"
+                    <label :for="'other_' + question.id" class="text-sm text-white">အခြား</label>
+                    <div v-if="selectedOption === 'other'" class="mt-2">
+                        <input type="text" v-model="otherText" placeholder="အသေးစိတ်ဖော်ပြပါ"
+                            @change="emits('update:modelValue', otherText)"
                             class="w-full h-10 px-4 rounded-lg bg-[#EFF1F5] text-sm text-[#696969] border border-[#E5E7EB] focus:outline-none focus:border-[#00E0E9]" />
                     </div>
                 </div>
-
-
-
             </fieldset>
         </div>
     </div>
@@ -82,27 +74,10 @@
 
     <!-- File input -->
     <div v-if="question.type === 'file'" class="space-y-2">
-        <!-- Uppder flex -->
-        <div class="flex justify-between items-end">
 
-            <span class="text-sm text-white font-semibold">{{ index + 1 }}.</span>
-            <h1 class="text-sm text-white font-semibold">{{ question.question_text }} <span
-                    class="text-base text-[#FF0000]">*</span>
-            </h1>
-
-            <div>
-                <!-- Pop description icon -->
-                <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M8 1.5C9.85652 1.5 11.637 2.2375 12.9497 3.55025C14.2625 4.86301 15 6.64348 15 8.5C15 10.3565 14.2625 12.137 12.9497 13.4497C11.637 14.7625 9.85652 15.5 8 15.5C6.14348 15.5 4.36301 14.7625 3.05025 13.4497C1.7375 12.137 1 10.3565 1 8.5C1 6.64348 1.7375 4.86301 3.05025 3.55025C4.36301 2.2375 6.14348 1.5 8 1.5ZM8.371 4.492C7.557 4.492 6.919 4.723 6.446 5.185C5.962 5.647 5.731 6.285 5.731 7.099H6.985C6.985 6.637 7.073 6.274 7.26 6.021C7.469 5.713 7.81 5.57 8.294 5.57C8.668 5.57 8.965 5.669 9.174 5.878C9.372 6.087 9.482 6.373 9.482 6.736C9.482 7.011 9.383 7.275 9.185 7.517L9.053 7.671C8.338 8.309 7.909 8.771 7.766 9.068C7.612 9.365 7.546 9.728 7.546 10.146V10.3H8.811V10.146C8.811 9.882 8.866 9.651 8.976 9.431C9.075 9.233 9.218 9.046 9.416 8.881C9.944 8.419 10.263 8.122 10.362 8.012C10.626 7.66 10.769 7.209 10.769 6.659C10.769 5.988 10.549 5.46 10.109 5.075C9.669 4.679 9.086 4.492 8.371 4.492ZM8.173 10.839C7.94871 10.8329 7.73116 10.916 7.568 11.07C7.48744 11.1459 7.42413 11.2382 7.38238 11.3407C7.34063 11.4432 7.3214 11.5534 7.326 11.664C7.326 11.906 7.403 12.104 7.568 12.258C7.72994 12.4152 7.94734 12.5021 8.173 12.5C8.415 12.5 8.613 12.423 8.778 12.269C8.86027 12.1916 8.92531 12.0977 8.9689 11.9934C9.01249 11.8892 9.03365 11.777 9.031 11.664C9.03311 11.5537 9.01274 11.4442 8.97113 11.3421C8.92953 11.24 8.86756 11.1474 8.789 11.07C8.62159 10.9157 8.40058 10.8328 8.173 10.839Z"
-                        fill="#00E0E9" />
-                </svg>
-            </div>
-        </div>
-
-        <div>
+        <div class="flex flex-wrap items-center gap-2">
             <div @click="openFileSelector"
-                class="flex items-center gap-4 bg-white rounded-lg p-2 border border-[#E5E7EB]/60 inline-flex">
+                class="flex items-center gap-4 bg-white rounded-lg p-2 border border-[#E5E7EB]/60 inline-flex cursor-pointer hover:bg-[#F5F5F5] active:bg-[#F5F5F5]/60 transition">
                 <span class="text-xs text-gray-600 font-semibold">Select file to upload</span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -112,69 +87,62 @@
             </div>
             <input @change="handleFileUpload" ref="file" type="file" id="file-upload" name="file-upload"
                 class="sr-only" />
+
+            <div v-for="(file, index) in files" :key="index"
+                class="flex items-center gap-2 bg-white rounded-lg p-2 border border-[#E5E7EB]/60 inline-flex">
+                <a :href="getFileUrl(file)" target="_blank" rel="noopener noreferrer"
+                    class="text-xs text-gray-600 font-semibold hover:underline">
+                    {{ file.name }}
+                </a>
+                <button @click="files.splice(index, 1)" type="button"
+                    class="text-xs text-red-500 focus:outline-none cursor-pointer hover:text-red-800 active:text-semibold transition">
+                    Remove
+                </button>
+
+            </div>
         </div>
     </div>
 
     <!-- Checkbox type -->
     <div v-if="question.type === 'checkbox'" class="space-y-2">
-        <!-- Question text -->
-        <div class="flex justify-between items-end">
-
-            <span class="text-sm text-white font-semibold">{{ index + 1 }}.</span>
-            <h1 class="text-sm text-white font-semibold">{{ question.question_text }} <span
-                    class="text-base text-[#FF0000]">*</span>
-            </h1>
-
-            <div>
-                <!-- Pop description icon -->
-                <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M8 1.5C9.85652 1.5 11.637 2.2375 12.9497 3.55025C14.2625 4.86301 15 6.64348 15 8.5C15 10.3565 14.2625 12.137 12.9497 13.4497C11.637 14.7625 9.85652 15.5 8 15.5C6.14348 15.5 4.36301 14.7625 3.05025 13.4497C1.7375 12.137 1 10.3565 1 8.5C1 6.64348 1.7375 4.86301 3.05025 3.55025C4.36301 2.2375 6.14348 1.5 8 1.5ZM8.371 4.492C7.557 4.492 6.919 4.723 6.446 5.185C5.962 5.647 5.731 6.285 5.731 7.099H6.985C6.985 6.637 7.073 6.274 7.26 6.021C7.469 5.713 7.81 5.57 8.294 5.57C8.668 5.57 8.965 5.669 9.174 5.878C9.372 6.087 9.482 6.373 9.482 6.736C9.482 7.011 9.383 7.275 9.185 7.517L9.053 7.671C8.338 8.309 7.909 8.771 7.766 9.068C7.612 9.365 7.546 9.728 7.546 10.146V10.3H8.811V10.146C8.811 9.882 8.866 9.651 8.976 9.431C9.075 9.233 9.218 9.046 9.416 8.881C9.944 8.419 10.263 8.122 10.362 8.012C10.626 7.66 10.769 7.209 10.769 6.659C10.769 5.988 10.549 5.46 10.109 5.075C9.669 4.679 9.086 4.492 8.371 4.492ZM8.173 10.839C7.94871 10.8329 7.73116 10.916 7.568 11.07C7.48744 11.1459 7.42413 11.2382 7.38238 11.3407C7.34063 11.4432 7.3214 11.5534 7.326 11.664C7.326 11.906 7.403 12.104 7.568 12.258C7.72994 12.4152 7.94734 12.5021 8.173 12.5C8.415 12.5 8.613 12.423 8.778 12.269C8.86027 12.1916 8.92531 12.0977 8.9689 11.9934C9.01249 11.8892 9.03365 11.777 9.031 11.664C9.03311 11.5537 9.01274 11.4442 8.97113 11.3421C8.92953 11.24 8.86756 11.1474 8.789 11.07C8.62159 10.9157 8.40058 10.8328 8.173 10.839Z"
-                        fill="#00E0E9" />
-                </svg>
-            </div>
-        </div>
 
         <!-- Checkbox options -->
         <fieldset>
             <div class="space-y-2">
+
                 <div v-for="(option, i) in JSON.parse(question.data).options" :key="i" class="flex items-center gap-2">
-                    <input :name="'question' + question.id" v-model="model[option.text]" type="checkbox" id="checkbox1"
-                        :id="option.uuid" @change="onCheckBoxChange"
+                    <input :name="'question' + question.id" v-model="selectedCheckboxes" :value="option.text"
+                        type="checkbox" :id="option.uuid"
+                        @change="emits('update:modelValue', [...selectedCheckboxes.filter(opt => opt !== 'other'), otherText])"
                         class="w-4 h-4 text-secondary-red border-gray-300 focus:ring-secondary-red" />
                     <label :for="option.uuid" class="text-sm text-white">{{ option.text }}</label>
                 </div>
 
-                <div v-if="selectedCheckboxes === 'အခြား'" class="mt-2">
-                    <input type="text" v-model="otherDetailsQ2" placeholder="အသေးစိတ်ဖော်ပြပါ"
-                        class="w-full h-10 px-4 rounded-lg bg-[#EFF1F5] text-sm text-[#696969] border border-[#E5E7EB] focus:outline-none focus:border-[#00E0E9]" />
+
+                <div v-if="JSON.parse(question.data).other_option" class="flex items-center gap-2">
+                    <input type="checkbox" :id="'other_' + question.id" value="other" v-model="selectedCheckboxes"
+                        @change="toggleOtherInput"
+                        class="w-4 h-4 text-secondary-red border-gray-300 focus:ring-secondary-red" />
+                    <label :for="'other_' + question.id" class="text-sm text-white">အခြား</label>
                 </div>
+                <transition name="fade" appear>
+                    <div v-if="selectedCheckboxes.includes('other')" class="mt-2">
+                        <input id="other" type="text" v-model="otherText"
+                            @input="emits('update:modelValue', [...selectedCheckboxes.filter(opt => opt !== 'other'), otherText])"
+                            placeholder="အသေးစိတ်ဖော်ပြပါ"
+                            class="w-full h-10 px-4 rounded-lg bg-[#EFF1F5] text-sm text-[#696969] border border-[#E5E7EB] focus:outline-none focus:border-[#00E0E9]" />
+                    </div>
+                </transition>
             </div>
         </fieldset>
     </div>
 
     <!-- Textarea type -->
     <div v-if="question.type === 'textarea'" class="space-y-2">
-        <!-- Uppder flex -->
-        <div class="flex justify-between items-end">
-
-            <span class="text-sm text-white font-semibold">{{ index + 1 }}.</span>
-            <h1 class="text-sm text-white font-semibold">{{ question.question_text }} <span
-                    class="text-base text-[#FF0000]">*</span>
-            </h1>
-
-            <div>
-                <!-- Pop description icon -->
-                <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M8 1.5C9.85652 1.5 11.637 2.2375 12.9497 3.55025C14.2625 4.86301 15 6.64348 15 8.5C15 10.3565 14.2625 12.137 12.9497 13.4497C11.637 14.7625 9.85652 15.5 8 15.5C6.14348 15.5 4.36301 14.7625 3.05025 13.4497C1.7375 12.137 1 10.3565 1 8.5C1 6.64348 1.7375 4.86301 3.05025 3.55025C4.36301 2.2375 6.14348 1.5 8 1.5ZM8.371 4.492C7.557 4.492 6.919 4.723 6.446 5.185C5.962 5.647 5.731 6.285 5.731 7.099H6.985C6.985 6.637 7.073 6.274 7.26 6.021C7.469 5.713 7.81 5.57 8.294 5.57C8.668 5.57 8.965 5.669 9.174 5.878C9.372 6.087 9.482 6.373 9.482 6.736C9.482 7.011 9.383 7.275 9.185 7.517L9.053 7.671C8.338 8.309 7.909 8.771 7.766 9.068C7.612 9.365 7.546 9.728 7.546 10.146V10.3H8.811V10.146C8.811 9.882 8.866 9.651 8.976 9.431C9.075 9.233 9.218 9.046 9.416 8.881C9.944 8.419 10.263 8.122 10.362 8.012C10.626 7.66 10.769 7.209 10.769 6.659C10.769 5.988 10.549 5.46 10.109 5.075C9.669 4.679 9.086 4.492 8.371 4.492ZM8.173 10.839C7.94871 10.8329 7.73116 10.916 7.568 11.07C7.48744 11.1459 7.42413 11.2382 7.38238 11.3407C7.34063 11.4432 7.3214 11.5534 7.326 11.664C7.326 11.906 7.403 12.104 7.568 12.258C7.72994 12.4152 7.94734 12.5021 8.173 12.5C8.415 12.5 8.613 12.423 8.778 12.269C8.86027 12.1916 8.92531 12.0977 8.9689 11.9934C9.01249 11.8892 9.03365 11.777 9.031 11.664C9.03311 11.5537 9.01274 11.4442 8.97113 11.3421C8.92953 11.24 8.86756 11.1474 8.789 11.07C8.62159 10.9157 8.40058 10.8328 8.173 10.839Z"
-                        fill="#00E0E9" />
-                </svg>
-            </div>
-        </div>
 
         <div>
-            <textarea type="text" :value="modelValue" @input="emits('update:modelValue', $event.target.value)"
+            <textarea type="text" :id="'question_' + question.id" :name="'question_' + question.id" :value="modelValue"
+                @input="emits('update:modelValue', $event.target.value)"
                 class="w-full p-4 rounded-lg bg-[#EFF1F5] text-sm text-[#696969] border border-[#E5E7EB] focus:outline-none focus:border-[#00E0E9]"
                 placeholder="Enter text"></textarea>
         </div>
@@ -182,26 +150,65 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-const selectedOptionQ1 = ref('')
-const otherDetailsQ1 = ref('')
-const selectedCheckboxes = ref([])
+const selectedOption = ref('') // For radio buttons
+const selectedCheckboxes = ref([]) // For checkboxes
+const otherText = ref('') // For "Other" input text
 
-const selectedOptionQ2 = ref('')
-const otherDetailsQ2 = ref('')
+function toggleOtherInput() {
+    if (!selectedCheckboxes.value.includes('other')) {
+        otherText.value = '' // Clear the "Other" text when unchecked
+    }
+}
+
+const files = ref([]) // For file input
 const file = ref(null);
+const showOther = ref(false);
+const showDescription = ref(false)
 
+function toggleDescription(event) {
+    event.stopPropagation() // Prevent the event from propagating to the document
+    showDescription.value = !showDescription.value
+}
+
+function closeDescription() {
+    showDescription.value = false
+}
+
+
+onMounted(() => {
+    // Add a click event listener to the document
+    document.addEventListener('click', closeDescription)
+    selectedCheckboxes.value = modelValue || [] // Initialize selected checkboxes with the provided value
+    files.value = modelValue || [] // Initialize files with the provided value
+
+})
+
+onUnmounted(() => {
+    // Remove the click event listener when the component is unmounted
+    document.removeEventListener('click', closeDescription)
+})
 
 function openFileSelector() {
     file.value.click()
 }
 
+function getFileUrl(file) {
+    if (file instanceof File) {
+        // Generate a temporary URL for the uploaded file
+        return URL.createObjectURL(file);
+    }
+    // If the file is already hosted, return its URL
+    return file.url || '#';
+}
+
 function handleFileUpload(event) {
+
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-        console.log('Selected file:', selectedFile.name);
-        // Handle the file upload logic here
+        files.value.push(selectedFile);
+        emits('update:modelValue', files.value); // Emit the selected file(s) to the parent component
     }
 }
 const { question, index, modelValue } = defineProps({
@@ -228,3 +235,21 @@ function onCheckBoxChange() {
     emits('update:modelValue', selectedOptions);
 }
 </script>
+
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active,
+.fade-appear-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-appear-from {
+    opacity: 0;
+}
+
+.fade-leave-to {
+    opacity: 0;
+}
+</style>
