@@ -30,6 +30,13 @@ class StatementController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->storeAs("public/statements/{$statement->id}", $image->getClientOriginalName());
+
+                // Fix file and folder permissions
+                $fullFilePath = storage_path('app/' . $path);
+                $dirPath = dirname($fullFilePath);
+                chmod($fullFilePath, 0644);
+                chmod($dirPath, 0755);
+
                 $imageUrls[] = Storage::url($path); // This gives a public URL like /storage/...
             }
         }
@@ -66,8 +73,7 @@ class StatementController extends Controller
         // Clean up: delete any image that was removed by admin
         foreach ($existingImages as $imagePath) {
             $imagetransformed = url($imagePath);
-            Log::info("ImagePath: $imagetransformed");
-            Log::info("incomingImages: ", $incomingImages);
+
             if (!in_array($imagetransformed, $incomingImages)) {
                 // Convert the URL to the storage path
                 $relativePath = str_replace('/storage/', 'public/', parse_url($imagePath, PHP_URL_PATH));
@@ -82,6 +88,14 @@ class StatementController extends Controller
 
             foreach ($request->file('images') as $image) {
                 $path = $image->storeAs($folderPath, $image->getClientOriginalName());
+
+                // Fix file and folder permissions
+                $fullFilePath = storage_path('app/' . $path);
+                $dirPath = dirname($fullFilePath);
+                chmod($fullFilePath, 0644);
+                chmod($dirPath, 0755);
+
+
                 $newImageUrls[] = Storage::url($path);
             }
         }

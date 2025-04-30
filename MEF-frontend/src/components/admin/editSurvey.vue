@@ -21,7 +21,7 @@
         placeholder="Enter description" rows="2"></textarea>
     </div>
 
-    <fieldset class="flex flex-col gap-4 md:w-[80%]">
+    <!-- <fieldset class="flex flex-col gap-4 md:w-[80%]">
       <div class="border-l-4 border-secondary-red pl-2">
         <label for="body" class="text-sm font-semibold">Form Status:</label>
       </div>
@@ -37,7 +37,7 @@
           <label for="suspened" class="block text-sm/6 font-medium text-gray-900">Suspened</label>
         </div>
       </div>
-    </fieldset>
+    </fieldset> -->
 
     <prefixQuestionEditor v-model="model.id_prefix_question"></prefixQuestionEditor>
 

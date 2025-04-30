@@ -37,13 +37,13 @@ export const useUserStore = defineStore('users', {
       }
     },
     async createUser(data) {
-      return axiosClient.post('/register/', data).then((response) => {
+      return axiosClient.post('/register', data).then((response) => {
         return response
       })
     },
     async updateUser(data) {
       return axiosClient
-        .put(`/users/${data.id}/`, data)
+        .put(`/users/${data.id}`, data)
         .then((response) => {
           if (response.status === 200) {
             const index = this.editors.findIndex((editor) => editor.id === data.id)
@@ -63,7 +63,7 @@ export const useUserStore = defineStore('users', {
     },
     async login(data) {
       return axiosClient
-        .post('/login/', data)
+        .post('/login', data)
         .then((response) => {
           if (response.status === 200) {
             this.user = response.data.user
@@ -85,7 +85,7 @@ export const useUserStore = defineStore('users', {
         })
     },
     async logout() {
-      return axiosClient.post('/logout/').then((response) => {
+      return axiosClient.post('/logout').then((response) => {
         console.log('Logout response:', response)
         if (response.status === 200) {
           this.user.token = null
@@ -95,7 +95,7 @@ export const useUserStore = defineStore('users', {
       })
     },
     async getUsers() {
-      return axiosClient.get('/users/').then((response) => {
+      return axiosClient.get('/users').then((response) => {
         if (response.status === 200) {
           this.editors = response.data
           return response
@@ -103,7 +103,7 @@ export const useUserStore = defineStore('users', {
       })
     },
     async deleteUser(id) {
-      return axiosClient.delete(`/users/${id}/`).then((response) => {
+      return axiosClient.delete(`/users/${id}`).then((response) => {
         if (response.status === 200) {
           this.editors = this.editors.filter((editor) => editor.id !== id)
           this.setNotification({

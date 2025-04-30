@@ -43,7 +43,7 @@
 
           <span class="text-sm">Response:</span>
           <!-- <div class="bg-light-blue w-2 h-2 rounded-full"></div> -->
-          <span class="text-sm">{{ props.survey.responses ? props.survey.responses : 0 }}</span>
+          <span class="text-sm">{{ props.survey.responses_count ? props.survey.responses_count : 0 }}</span>
         </div>
       </div>
 

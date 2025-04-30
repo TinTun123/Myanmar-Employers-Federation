@@ -108,6 +108,7 @@ onMounted(() => {
   userStore.loading.show = true;
   newsStore.fetchPosts().then(() => {
     userStore.loading.show = false
+    userStore.loading.message = 'Loading News...'
   }).catch((error) => {
     console.error('Error fetching posts:', error)
     userStore.loading.show = false

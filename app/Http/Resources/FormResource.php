@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Form_version;
+use App\Models\Response;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,7 +31,8 @@ class FormResource extends JsonResource
                 $this->latestFormVersion?->questions->where('is_prefixed', true)->first()
             ),
             'version' => $this->latestFormVersion->version ?? 1,
-            'form_version_id' => $this->latestFormVersion->id
+            'form_version_id' => $this->latestFormVersion->id,
+            'responses_count' => $this->latestFormVersion?->responses()->count() ?? 0,
         ];
     }
 }

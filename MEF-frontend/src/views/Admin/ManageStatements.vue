@@ -43,7 +43,7 @@
     <div class="flex items-center justify-start gap-2 mt-4 mx-6">
       <span class="text-sm text-black/70">Total</span>
       <div class="w-[8px] h-[8px] bg-black/40 rounded-full"></div>
-      <span class="text-sm text-black/70">48</span>
+      <span class="text-sm text-black/70">{{ statements.length ? statements.length : 0 }}</span>
     </div>
 
     <div class="flex flex-col mx-6 my-6 gap-4 md:my-6 md:mx-6 md:grid md:grid-cols-12">
@@ -53,7 +53,7 @@
     </div>
 
     <div class="flex justify-end items-center gap-4 text-sm my-4 mx-4">
-      <button
+      <!-- <button
         class="flex items-center gap-4 px-4 py-2 bg-white border border-black/70 shadow-lg rounded-full cursor-pointer hover:shadow-none">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -71,7 +71,7 @@
             d="M5.29295 1.63654C5.10548 1.82406 5.00017 2.07837 5.00017 2.34354C5.00017 2.6087 5.10548 2.86301 5.29295 3.05054L10.243 8.00054L5.29295 12.9505C5.11079 13.1391 5.01 13.3917 5.01228 13.6539C5.01456 13.9161 5.11973 14.1669 5.30513 14.3524C5.49054 14.5378 5.74135 14.6429 6.00355 14.6452C6.26575 14.6475 6.51835 14.5467 6.70695 14.3645L12.364 8.70754C12.5514 8.52001 12.6567 8.2657 12.6567 8.00054C12.6567 7.73537 12.5514 7.48106 12.364 7.29354L6.70695 1.63654C6.51942 1.44907 6.26512 1.34375 5.99995 1.34375C5.73479 1.34375 5.48048 1.44907 5.29295 1.63654Z"
             fill="black" />
         </svg>
-      </button>
+      </button> -->
     </div>
   </div>
 

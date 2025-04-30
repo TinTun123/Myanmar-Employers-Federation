@@ -37,6 +37,12 @@ class NewsController extends Controller
         if ($request->hasFile('imgFile')) {
             $image = $request->file('imgFile');
             $path = $image->storeAs("public/news/{$news->id}", $image->getClientOriginalName());
+
+            $fullFilePath = storage_path('app/' . $path);
+            $dirPath = dirname($fullFilePath);
+            chmod($fullFilePath, 0644);
+            chmod($dirPath, 0755);
+
             $news->update(['image' => "storage/news/{$news->id}/" . $image->getClientOriginalName()]);
         }
 
@@ -72,6 +78,14 @@ class NewsController extends Controller
 
             $image = $request->file('imgFile');
             $path = $image->storeAs("public/news/{$news->id}", $image->getClientOriginalName());
+
+            // Fix file and folder permissions
+            $fullFilePath = storage_path('app/' . $path);
+            $dirPath = dirname($fullFilePath);
+            chmod($fullFilePath, 0644);
+            chmod($dirPath, 0755);
+
+
             $validated['image'] = "storage/news/{$news->id}/" . $image->getClientOriginalName();
         }
 

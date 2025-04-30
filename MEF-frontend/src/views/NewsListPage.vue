@@ -18,7 +18,7 @@
             <!-- Navi text end -->
         </div>
         <LoadingComponent v-if="userStore.loading.state"></LoadingComponent>
-        <div v-else class="grid grid-cols-12 gap-4 mt-4 mx-4 lg:mx-[90px]">
+        <div v-else class="grid grid-cols-12 gap-4 my-4 mx-4 lg:mx-[90px]">
             <NewsCard v-for="(post, index) in news" @click="goTo(post.id)" :key="index"
                 class="col-span-12 md:col-span-4" :class="colSpans[index]" :post="post" :index="index">
             </NewsCard>

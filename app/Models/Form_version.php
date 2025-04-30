@@ -14,6 +14,7 @@ class Form_version extends Model
         'created_at',
         'updated_at',
     ];
+
     public function form()
     {
         return $this->belongsTo(Form::class);
@@ -22,6 +23,11 @@ class Form_version extends Model
     public function questions()
     {
         return $this->hasMany(FormQuestion::class);
+    }
+
+    public function responses()
+    {
+        return $this->hasMany(Response::class, 'form_version_id');
     }
 
     /**

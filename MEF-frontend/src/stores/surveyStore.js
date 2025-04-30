@@ -9,6 +9,9 @@ export const useSurveyStore = defineStore('survey', {
     surveys: {
       data: [],
     },
+    answerRecord: localStorage.getItem('answerRecord')
+      ? JSON.parse(localStorage.getItem('answerRecord'))
+      : [],
   }),
   actions: {
     async fetchSurveys() {
@@ -69,12 +72,11 @@ export const useSurveyStore = defineStore('survey', {
         }
       }
 
-      console.log('FormData', formData)
-
       return axiosClient.post(`/forms/${surveyId}/answers`, formData).then((response) => {
         console.log(response.data)
-
-        return response.data.data
+        this.answerRecord.push(response.data)
+        localStorage.setItem('answerRecord', JSON.stringify(this.answerRecord))
+        return response
       })
     },
     async createSurvey(survey) {

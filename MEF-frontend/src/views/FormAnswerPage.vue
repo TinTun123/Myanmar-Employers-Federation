@@ -1,6 +1,8 @@
 <template>
     <div
         class="bg-black min-h-screen pt-12 relative overflow-x-hidden bg-no-repeat bg-center bg-[url(../assets/bg-illustration.svg)] bg-cover">
+        <LoadingComponent v-if="userStore.loading.state"></LoadingComponent>
+
         <div class="z-100 md:grid md:grid-cols-12 md:gap-4 md:space-y-8">
             <div
                 class="flex md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-3 gap-4 items-center rounded-r-lg bg-secondary-red px-4 py-2 w-[90%] md:w-auto">
@@ -63,17 +65,28 @@
                 </div>
             </div>
 
-            <FormProgressComponent class="md:col-start-3 md:col-span-5"
+            <FormProgressComponent v-if="!caseId" class="md:col-start-3 md:col-span-5"
                 :progressData="{ 'total': totalQuestions, 'answered': answeredQuestions, 'percentage': progress }">
             </FormProgressComponent>
-            <pre>
-                {{ my_error }}
-            </pre>
-            <pre class="text-white">
-                {{ model }}
-            </pre>
+
+            <div v-if="caseId"
+                class="mx-4 my-8 p-4 md:col-start-5 md:col-span-4 bg-white flex flex-col items-center justify-center gap-4 rounded-lg shadow-lg">
+                <div class="w-8 h-8">
+                    <svg class="w-full h-full" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M24 48C30.6274 48 36.6274 45.3137 40.9705 40.9705C45.3137 36.6274 48 30.6274 48 24C48 17.3726 45.3137 11.3726 40.9705 7.02943C36.6274 2.6863 30.6274 0 24 0C17.3726 0 11.3726 2.6863 7.02943 7.02943C2.6863 11.3726 0 17.3726 0 24C0 30.6274 2.6863 36.6274 7.02943 40.9705C11.3726 45.3137 17.3726 48 24 48Z"
+                            fill="#A087F4" />
+                        <path d="M14.3999 24.0008L21.5999 31.2008L35.9999 16.8008" stroke="white" stroke-width="4"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+
+                </div>
+                <h2 class="text-sm text-gray-500 font-semibold">ANSWER SUBMITTED!</h2>
+                <h1 class="text-sm font-semibold text-gray-600 font-medium">Case: {{ caseId }}</h1>
+            </div>
+
             <!-- Input session -->
-            <div class="mx-4 my-8 space-y-8 md:space-y-12 md:col-start-3 md:col-span-8 min-h-[70vh]">
+            <div v-else class="mx-4 my-8 space-y-8 md:space-y-12 md:col-start-3 md:col-span-8 min-h-[70vh]">
                 <TransitionGroup name="fade-horizontal">
                     <div v-for="(question, index) in paginatedQuestions" :key="question.id">
                         <AnswerComponent :index="index + currentPage * questionsPerPage" :question="question"
@@ -89,7 +102,7 @@
                         class="bg-white border border-black/40 shadow-lg focus:shadow-none hover:shadow-none transition cursor-pointer rounded-lg px-8 py-2 flex items-center gap-1">
                         <h3>Cancel</h3>
                     </div>
-                    <div @click="(currentPage < totalPages - 1) ? nextPage() : submitAnswer()"
+                    <div v-if="!caseId" @click="(currentPage < totalPages - 1) ? nextPage() : submitAnswer()"
                         class="bg-light-blue text-white font-semibold border border-light-blue focus:shadow-none hover:shadow-none transition cursor-pointer shadow-lg rounded-lg px-8 py-2 flex items-center gap-1">
                         <h3>Next</h3>
                     </div>
@@ -97,8 +110,8 @@
             </div>
         </div>
         <transition name="fade-horizontal" mode="out-in">
-            <div v-if="notification.visible"
-                class="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50">
+            <div v-if="notification.visible" :class="[notification.type === 'success' ? 'bg-green-500' : 'bg-red-500']"
+                class="fixed top-4 right-4 text-white px-4 py-2 rounded shadow-lg z-50 rounded-lg">
                 {{ notification.message }}
             </div>
         </transition>
@@ -110,11 +123,14 @@
 import { ref } from 'vue'
 import FormProgressComponent from '../components/FormProgressComponent.vue'
 import { useSurveyStore } from '../stores/surveyStore.js'
+import { useUserStore } from '../stores/userStore.js'
 import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import AnswerComponent from '../components/AnswerComponent.vue'
 import { computed } from 'vue'
 import { toValue } from 'vue'
+import { useRouter } from 'vue-router'
+import LoadingComponent from '../components/LoadingComponent.vue'
 
 const model = ref({
     title: '',
@@ -131,11 +147,13 @@ const model = ref({
             options: []
         },
     },
+    form_version_id: '',
     questions: [
 
     ],
 })
 
+const router = useRouter();
 const questionsPerPage = 3 // Number of questions per page
 const currentPage = ref(0) // Track the current page
 const totalPages = computed(() => Math.ceil(model.value.questions.length / questionsPerPage))
@@ -181,6 +199,11 @@ const nextPage = () => {
 }
 
 const prevPage = () => {
+    if (caseId.value) {
+        router.push({ name: 'home' })
+        return;
+    }
+
     if (currentPage.value > 0) {
         currentPage.value--
     }
@@ -190,16 +213,24 @@ const answer = ref({
 })
 
 const surveyStore = useSurveyStore();
+const userStore = useUserStore();
 const route = useRoute()
 const my_error = ref('')
 
 onMounted(() => {
     let id = route.params.id;
+    userStore.loading.message = 'Loading form...'
+    userStore.loading.state = true;
     surveyStore.getSurveyById(id).then((response) => {
         model.value = response;
         model.value.questions.unshift(model.value.id_prefix_question)
+
+        if (response.id) {
+            userStore.loading.state = false;
+        }
+
     }).catch((error) => {
-        console.log(error);
+
         my_error.value = error.response.data.message;
     })
 
@@ -230,7 +261,6 @@ function submitAnswer() {
             }
         }
     })
-    console.log(pre_answer);
 
     const payload = {
         'survey_id': model.value.id,
@@ -240,11 +270,10 @@ function submitAnswer() {
     }
 
     surveyStore.submitAnswer(payload.survey_id, payload).then((response) => {
-        console.log(response);
-        showNotification('Answer submitted successfully!');
+        showNotification('Answer submitted successfully!', 'success');
     }).catch((error) => {
-        console.log(error);
-        showNotification('Failed to submit answer. Please try again.');
+
+        showNotification('Failed to submit answer. Please try again.', 'error');
     })
 
 }
@@ -254,10 +283,36 @@ const notification = ref({
     message: '',
 });
 
-const showNotification = (message) => {
+const caseId = computed(() => {
+    let canseId = '';
+
+    if (model.value.form_version_id && surveyStore.answerRecord.length > 0) {
+        const answerIndex = surveyStore.answerRecord.findIndex((record) => {
+
+            console.log('Answer record.form_version', parseInt(record.form_version_id));
+            console.log('model.value.form_version', model.value.form_version_id);
+
+            return parseInt(record.form_version_id) === model.value.form_version_id;
+        });
+        console.log('Answer index', answerIndex);
+
+
+        if (answerIndex === -1) {
+            return false; // Not submitted
+        } else {
+
+            return surveyStore.answerRecord[answerIndex].case_id; // Submitted
+        }
+    } else {
+        return false; // Submitted
+    };
+
+})
+
+const showNotification = (message, type) => {
     notification.value.message = message;
     notification.value.visible = true;
-
+    notification.value.type = type || 'success'; // Default to 'success' if no type is provided
     // Hide the notification after 3 seconds
     setTimeout(() => {
         notification.value.visible = false;
@@ -267,9 +322,24 @@ const showNotification = (message) => {
 const validateRequiredFields = () => {
     const currentQuestions = paginatedQuestions.value;
 
+
     for (const question of currentQuestions) {
-        if (question.is_required && (!answer.value[question.id] || answer.value[question.id].trim() === '')) {
-            return false; // A required field is not filled
+        const value = answer.value[question.id];
+        if (question.is_required) {
+            if (typeof value === 'string') {
+                // Check if the string is empty
+                if (value.trim() === '') {
+                    return false;
+                }
+            } else if (Array.isArray(value)) {
+                // Check if the array is empty
+                if (value.length === 0) {
+                    return false;
+                }
+            } else {
+                // Handle other types (e.g., undefined, null)
+                return false;
+            }
         }
     }
 

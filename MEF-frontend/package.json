@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --mode production",
     "preview": "vite preview",
     "test:e2e": "nightwatch tests/e2e/*",
     "test:unit": "nightwatch src/**/__tests__/*",

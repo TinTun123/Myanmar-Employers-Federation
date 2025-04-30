@@ -6,6 +6,7 @@ use App\Http\Requests\StoreResponseRequest;
 use App\Models\Answer;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AnswerController extends Controller
@@ -71,27 +72,52 @@ class AnswerController extends Controller
         return response()->json([
             'message' => 'Response stored successfully.',
             'response_id' => $response->id,
+            'form_version_id' => $request->form_version_id,
+            'case_id' => $response->case_id,
         ], 201);
     }
 
     protected function generateCaseId(StoreResponseRequest $request)
     {
-        $prefixedAnswer = collect($request->input('answers'))
-            ->firstWhere('is_prefixed', 1);
+        $answers = $request->input('answers');
+        $prefixedShortForm = null;
 
-        if (!$prefixedAnswer) {
-            return response()->json(['message' => 'Prefixed answer not found.'], 400);
+        foreach ($answers as $questionId => $answerData) {
+            if (isset($answerData['is_prefixed']) && $answerData['is_prefixed'] == 1) {
+                // Get the related FormQuestion model
+                $question = \App\Models\FormQuestion::find($questionId);
+
+                if (!$question) {
+                    continue;
+                }
+
+                // Decode its `data` JSON
+                $questionData = json_decode($question->data, true);
+                if (!isset($questionData['options'])) {
+                    continue;
+                }
+
+                // Find the selected option by matching content (id)
+                $answer_text = $answerData['content']; // this should be the option.id
+                $matchedOption = collect($questionData['options'])->firstWhere('long_form', $answer_text);
+
+                if ($matchedOption && isset($matchedOption['short_form'])) {
+                    $prefixedShortForm = $matchedOption['short_form'];
+                    break;
+                }
+            }
         }
 
-        // 2. Get the prefix content
-        $prefix = $prefixedAnswer['content'];
+        if (!$prefixedShortForm) {
+            return response()->json(['message' => 'Could not extract prefixed short_form from selected answer.'], 400);
+        }
 
-        // 3. Count existing responses with this prefix
-        $count = \App\Models\Response::where('case_id', 'like', $prefix . '-(%')->count();
+        // Count existing responses with this prefix
+        $count = \App\Models\Response::where('case_id', 'like', $prefixedShortForm . '-%')->count();
 
-        // 4. Generate new case_id
+        // Generate case ID with 6-digit padding
         $newNumber = $count + 1;
-        $caseId = sprintf('%s-(%04d)', $prefix, $newNumber);
+        $caseId = sprintf('%s-%06d', $prefixedShortForm, $newNumber);
 
         return $caseId;
     }

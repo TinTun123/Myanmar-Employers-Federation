@@ -4,7 +4,7 @@
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-2">
         <span class="text-sm font-bold">Q{{ props.index + 1 }}.</span>
-        <h1 class="text-sm font-semibold line-clamp-1">{{ model.question }}</h1>
+        <h1 class="text-sm font-semibold line-clamp-1 leading-6">{{ model.question_text }}</h1>
       </div>
 
       <button @click.stop="deleteQuestion"
@@ -168,7 +168,7 @@ function deleteQuestion() {
 }
 
 function shouldHaveOption() {
-  return ['select', 'radio', 'checkbox', 'file'].includes(model.value.type) ? true : false
+  return ['select', 'radio', 'checkbox'].includes(model.value.type) ? true : false
 }
 
 function upperCaseFirst(str) {

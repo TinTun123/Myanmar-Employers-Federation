@@ -26,6 +26,7 @@ export const useNewsStore = defineStore('news', {
       const userStore = useUserStore()
 
       userStore.loading.state = true
+      userStore.loading.message = 'Loading statements...'
       return axiosClient.get('/statements').then((response) => {
         userStore.loading.state = false
 
@@ -81,11 +82,11 @@ export const useNewsStore = defineStore('news', {
         }
       })
 
-      return axiosClient.post('/news/', formData).then((response) => {
+      return axiosClient.post('/news', formData).then((response) => {
         console.log('response from newsStore', response)
 
         if (response.status === 201) {
-          this.activities.data.push(response.data)
+          this.activities.data.push(response.data.data)
         }
 
         return response
@@ -199,7 +200,7 @@ export const useNewsStore = defineStore('news', {
       formData.append('title', statement.title)
       formData.append('date', statement.date)
       formData.append('committee', statement.committee)
-      formData.append('statementNo', statement.statementNo)
+      formData.append('statement_no', statement.statementNo)
       formData.append('body', statement.body)
 
       // Append image files

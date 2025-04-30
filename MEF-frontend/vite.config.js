@@ -22,6 +22,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['a028-2405-9800-b500-ad44-69f4-756a-48f4-3525.ngrok-free.app'],
+    allowedHosts: ['mef-myanmar.com', 'api.mef-myanmar.com'],
   },
 })
