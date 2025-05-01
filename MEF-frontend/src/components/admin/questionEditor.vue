@@ -20,7 +20,7 @@
 
     <!-- type select -->
     <div>
-      <div class="flex justify-between items-center gap-2 w-[30%] md:w-[45%]">
+      <div class="flex justify-between items-center gap-2 md:w-[45%]">
         <label :for="'type_' + model.id" name="type" class="text-xs md:text-sm font-semibold">Select Question
           Type:</label>
 
@@ -31,7 +31,7 @@
           <label :for="'isRequired_' + model.id" class="text-xs md:text-xs font-semibold text-gray-600">Required</label>
         </div>
       </div>
-      <div class="mt-2 w-[30%] md:w-[45%] relative">
+      <div class="mt-2 md:w-[45%] relative">
         <select :id="'type_' + model.id" name="type" autocomplete="Question type" v-model="model.type"
           @change="typeChange"
           class="appearance-none w-full focus:outline-none rounded-md bg-white text-sm text-gray-900 sm:text-sm/6 text-xs md:text-sm border border-gray-600 shadow-sm px-2 leading-7">

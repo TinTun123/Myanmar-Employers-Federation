@@ -21,7 +21,7 @@
 
     <div class="mr-6 my-4">
       <button @click="goTo('adminEditForms')"
-        class="ml-auto bg-light-blue border border-light-blue shadow-lg rounded-full px-4 py-2 flex items-center gap-1 text-sm text-white">
+        class="ml-auto cursor-pointer group hover:bg-light-blue/90 focus:bg-light-blue/70 bg-light-blue border border-light-blue shadow-lg rounded-full px-4 py-2 flex items-center gap-1 text-sm text-white">
         <span>New</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path

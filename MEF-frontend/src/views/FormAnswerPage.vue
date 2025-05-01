@@ -109,12 +109,7 @@
                 </div>
             </div>
         </div>
-        <transition name="fade-horizontal" mode="out-in">
-            <div v-if="notification.visible" :class="[notification.type === 'success' ? 'bg-green-500' : 'bg-red-500']"
-                class="fixed top-4 right-4 text-white px-4 py-2 rounded shadow-lg z-50 rounded-lg">
-                {{ notification.message }}
-            </div>
-        </transition>
+        <Notification></Notification>
     </div>
 
 </template>
@@ -131,6 +126,7 @@ import { computed } from 'vue'
 import { toValue } from 'vue'
 import { useRouter } from 'vue-router'
 import LoadingComponent from '../components/LoadingComponent.vue'
+import Notification from '../components/Notification.vue'
 
 const model = ref({
     title: '',

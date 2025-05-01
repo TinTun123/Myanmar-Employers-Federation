@@ -1,6 +1,6 @@
 <template>
 
-    <div class="relative inline-block text-left mx-4">
+    <div class="relative inline-block text-left mx-4 md:m-0">
         <div>
             <button type="button" @click.stop="isDrop = !isDrop"
                 class="inline-flex w-full justify-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
@@ -22,11 +22,11 @@
             <div v-if="isDrop"
                 class="absolute left-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden"
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                <div @click.stop="emit('update:modelValue', version); isDrop = !isDrop" class="py-1" role="none"
+                <div @click.stop="emit('update:modelValue', version.id); isDrop = !isDrop" class="py-1" role="none"
                     v-for="(version, index) in versions" :key="index">
                     <!-- Active: "bg-gray-100 text-gray-900 outline-hidden", Not Active: "text-gray-700" -->
                     <h3 href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
-                        id="menu-item-0">Version {{ version }}</h3>
+                        id="menu-item-0">Version {{ version.version }}</h3>
                 </div>
 
             </div>
@@ -39,7 +39,7 @@ import { ref } from 'vue'
 
 const props = defineProps({
     modelValue: {
-        type: String,
+        type: Number,
         required: true
     },
     versions: {

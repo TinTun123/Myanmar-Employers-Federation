@@ -111,7 +111,7 @@ const router = createRouter({
           component: ManageBoard,
         },
         {
-          path: '/admin/responses/',
+          path: '/admin/responses/:id',
           name: 'adminResponses',
           component: Response,
         },

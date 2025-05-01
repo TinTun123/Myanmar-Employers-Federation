@@ -21,24 +21,6 @@
         placeholder="Enter description" rows="2"></textarea>
     </div>
 
-    <!-- <fieldset class="flex flex-col gap-4 md:w-[80%]">
-      <div class="border-l-4 border-secondary-red pl-2">
-        <label for="body" class="text-sm font-semibold">Form Status:</label>
-      </div>
-      <div>
-        <div class="flex items-center gap-x-3">
-          <input id="active" name="status" type="radio" value="0" v-model="model.status"
-            class="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden" />
-          <label for="active" class="block text-sm/6 font-medium text-gray-900">Active</label>
-        </div>
-        <div class="flex items-center gap-x-3">
-          <input id="suspened" name="status" type="radio" value="1" v-model="model.status"
-            class="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden" />
-          <label for="suspened" class="block text-sm/6 font-medium text-gray-900">Suspened</label>
-        </div>
-      </div>
-    </fieldset> -->
-
     <prefixQuestionEditor v-model="model.id_prefix_question"></prefixQuestionEditor>
 
     <!-- Question sesstion -->

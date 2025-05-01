@@ -1,9 +1,9 @@
 <template>
     <AdminTitleComponent :title="'View Responses'"></AdminTitleComponent>
+    <LoadingComponent v-if="userStore.loading.state"></LoadingComponent>
+    <div class="space-y-4 md:space-y-0 my-4 md:grid md:grid-cols-12 md:gap-6">
 
-    <div class="space-y-4">
-
-        <div class="flex justify-between items-center gap-4 px-4 py-2 mx-4">
+        <div class="flex justify-between items-start gap-4 px-4 py-2 md:py-0 md:mx-0 mx-4 md:col-start-4 md:col-span-6">
             <!-- Form title -->
             <div>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,7 +14,7 @@
 
             </div>
             <h1 class="text-base text-black/70 md:text-lg font-semibold text-center leading-7">
-                အလုပ်ရှင်များ၏ စစ်တပ်နှင့်ပတ်သက်သော အပြစ်မှု တိုင်ကြားဖောင်
+                {{ model.title }}
             </h1>
             <div>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,16 +26,17 @@
             </div>
         </div>
 
-        <div>
-            <DropDownComponent :versions="model.versions" v-model="model.version"></DropDownComponent>
+        <div class="md:col-start-3 md:col-span-6">
+            <DropDownComponent :versions="model.versions" v-model="model.version">
+            </DropDownComponent>
         </div>
 
 
-        <div class="flex justify-between items-center gap-4 px-4 py-2 mx-4">
+        <div class="flex justify-between items-center gap-4 px-4 py-2 md:p-0  md:m-0 mx-4 md:col-start-3 md:col-span-8">
             <!-- Total questions and answers -->
-            <div class="flex items-center gap-1 text-sm text-black/60 font-semibold">
+            <div class=" flex items-start gap-2 text-sm text-black/60 font-semibold">
                 <h3>
-                    Responses: 26
+                    Responses: {{ model.responses.length }}
                 </h3>
                 <div>
                     <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -46,9 +47,9 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-1 text-sm text-black/60 font-semibold">
+            <div class="flex items-center gap-2 text-sm text-black/60 font-semibold">
                 <h3>
-                    Questions: 13
+                    Questions: {{ model.total_question }}
                 </h3>
                 <div>
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -61,10 +62,11 @@
             </div>
         </div>
 
-        <div class="mx-6 flex items-center justify-between md:justify-start gap-4 md:gap-4">
+        <div
+            class="mx-6 flex items-center justify-between md:justify-between gap-4 md:gap-4 md:mx-0 mx-4 md:col-start-3 md:col-span-5">
             <!-- Search bar -->
             <input type="text" placeholder="Enter case-id..."
-                class="px-4 py-1 flex-2 md:flex-none md:w-[50%] border border-black/60 rounded-full shadow-sm focus:outline-none text-sm text-black/70" />
+                class="px-4 py-1 flex-2 md:flex-none border md:w-full border-black/60 rounded-full shadow-sm focus:outline-none text-sm text-black/70" />
             <button
                 class="px-3 py-1 flex items-center gap-1 bg-white border border-black/60 rounded-full shadow-sm group hover:bg-secondary-red cursor-pointer transition duration-200 ease-in-out">
                 <span class="text-xs text-black/70 font-semibold group-hover:text-white">Search</span>
@@ -76,7 +78,8 @@
             </button>
         </div>
 
-        <div class="rounded-lg bg-white shadow-lg mx-4 space-y-4 border border-[#505050]">
+        <div
+            class="rounded-lg bg-white shadow-lg overflow-hidden m-4 md:m-0 space-y-4 border border-[#505050] mx-4 md:col-start-3 md:col-span-8">
             <!-- Response card -->
             <div class="flex justify-between items-center px-4 pt-4">
                 <h1>Version {{ model.version }}</h1>
@@ -112,68 +115,129 @@
                 </div>
             </div>
 
-            <p class="text-xs text-[#505050] font-medium line-clamp-3 px-4">
-                Browse a list of Flowbite products designed to help you work and play, stay organized, get answers, keep
-                in touch, grow your business, and more.
+            <p class="text-xs text-[#505050] font-medium leading-7 line-clamp-3 px-4">
+                {{ model.description }}
             </p>
-
 
             <div class="flex items-center justify-between text-sm text-black/70 px-4 pb-2">
                 <h3>Case ID</h3>
                 <h3>Submitted</h3>
             </div>
+            <div v-if="model.responses.length === 0" class="flex items-center justify-center py-4">
 
-            <div @click.stop="isSelected = !isSelected"
-                class="flex items-center justify-between text-sm text-black/70 px-4 py-3 border-t mb-0 border-[#505050]/40">
-                <h3 class="text-xs font-semibold">ABC - 000013</h3>
-                <h3 class="text-xs font-semibold">2023-10-01</h3>
+                <h1>No response submitted yet!</h1>
+
             </div>
-            <transition name="dropdown" enter-active-class="transition ease-out duration-100"
-                enter-from-class="transform opacity-0 scale-98" enter-to-class="transform opacity-100 scale-100"
-                leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
-                leave-to-class="transform opacity-0 scale-98">
-                <div v-if="isSelected" class="h-[40vh] flex items-center justify-center bg-light-blue/10 rounded-lg">
-                    <span class="text-sm text-[#505050]">Answer table will be here!</span>
+            <div v-else>
+                <div v-for="(item, index) in model.responses" @click.stop="selectResponse(item.id)" :key="index"
+                    class="mb-0">
+                    <ResponseRow :response="item"></ResponseRow>
                 </div>
-            </transition>
-            <div
-                class="flex items-center justify-between text-sm text-black/70 px-4 py-3 border-t mb-0 border-[#505050]/40">
-                <h3 class="text-xs font-semibold">ABC - 000014</h3>
-                <h3 class="text-xs font-semibold">2023-10-01</h3>
             </div>
-
-            <div
-                class="flex items-center justify-between text-sm text-black/70 px-4 py-3 border-t mb-0 border-[#505050]/40">
-                <h3 class="text-xs font-semibold">ABC - 000015</h3>
-                <h3 class="text-xs font-semibold">2023-10-01</h3>
-            </div>
-
 
         </div>
     </div>
-</template>
 
+</template>
 <script setup>
 import AdminTitleComponent from '@/components/Admin/adminTitleComponent.vue'
 import DropDownComponent from '@/components/DropdownComponent.vue'
-import { ref } from 'vue'
-
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useSurveyStore } from '@/stores/surveyStore.js'
+import { useUserStore } from '@/stores/userStore.js'
+import ResponseRow from '@/components/admin/ResponseRow.vue'
+import LoadingComponent from '@/components/LoadingComponent.vue'
 
 const model = ref({
+    form_version_id: 1,
+    title: 'အလုပ်ရှင်များ၏ စစ်တပ်နှင့်ပတ်သက်သော အပြစ်မှု တိုင်ကြားဖောင်',
+    description: '',
+    total_question: 26,
     version: 1,
     versions: [1, 2, 3],
-    questions: [
-        {
-            question: 'What is your name?',
-            answer: 'John Doe'
-        },
-        {
-            question: 'What is your age?',
-            answer: '25'
-        }
-    ]
+    responses: [
+    ],
 })
 
 const isDrop = ref(false)
-const isSelected = ref(false)
+const selectedRowId = ref(null)
+const questionAnswer = ref({});
+const route = useRoute();
+const surveyStore = useSurveyStore()
+const userStore = useUserStore()
+
+onMounted(() => {
+    const form_version_id = route.params.id
+
+
+    if (form_version_id) {
+        userStore.loading.state = true;
+        userStore.loading.message = 'Loading responses...'
+        surveyStore.getFormResponses(form_version_id).then((response) => {
+            userStore.loading.state = false;
+            userStore.loading.message = ''
+
+            if (response.status === 200) {
+                model.value = response.data;
+            } else {
+                userStore.setNotification({
+                    type: 'error',
+                    message: 'Failed to load responses.',
+                })
+            }
+        }).catch((error) => {
+            console.error(error)
+            userStore.loading.state = false;
+            userStore.loading.message = ''
+        })
+    }
+})
+
+watch(() => model.value.version, (newValue) => {
+    if (newValue) {
+        userStore.loading.state = true;
+        userStore.loading.message = 'Loading responses...'
+        surveyStore.getFormResponses(newValue).then((response) => {
+            userStore.loading.state = false;
+            userStore.loading.message = ''
+
+            if (response.status === 200) {
+                model.value = response.data;
+            } else {
+                userStore.setNotification({
+                    type: 'error',
+                    message: 'Failed to load responses.',
+                })
+            }
+        }).catch((error) => {
+            console.error(error)
+            userStore.loading.state = false;
+            userStore.loading.message = ''
+        })
+    }
+})
+
+function selectResponse(id) {
+
+    if (surveyStore.selectedresponseId === id) {
+        surveyStore.selectedresponseId = null
+    } else {
+        surveyStore.selectedresponseId = id
+    }
+}
+
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease-in-out;
+    /* Adjust duration and easing */
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>

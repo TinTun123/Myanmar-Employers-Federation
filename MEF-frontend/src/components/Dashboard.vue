@@ -33,14 +33,6 @@
           <span class="font-semibold text-xs">Manage Forms</span>
         </div>
 
-        <div @click="goTo('adminResponses')" :class="[
-          route.name === 'adminResponses'
-            ? 'bg-secondary-red text-white'
-            : 'bg-white text-black/60',
-        ]" class="rounded-full shadow-lg border border-secondary-red px-3 py-1">
-          <span class="font-semibold text-xs">Results</span>
-        </div>
-
         <div @click="goTo('adminStatements')" :class="[
           route.name === 'adminStatements'
             ? 'bg-secondary-red text-white'
@@ -100,15 +92,6 @@
         ]"
           class="rounded-full lg:hover:shadow-none transition cursor-pointer shadow-lg border border-secondary-red px-3 py-1 text-center">
           <span class="font-semibold text-xs">Manage Forms</span>
-        </div>
-
-        <div @click="goTo('adminResponses')" :class="[
-          route.name === 'adminResponses'
-            ? 'bg-secondary-red text-white'
-            : 'bg-white text-black/60',
-        ]"
-          class="rounded-full lg:hover:shadow-none transition cursor-pointer shadow-lg border border-secondary-red px-3 py-1 text-center">
-          <span class="font-semibold text-xs">Results</span>
         </div>
 
         <div @click="goTo('adminStatements')" :class="[
