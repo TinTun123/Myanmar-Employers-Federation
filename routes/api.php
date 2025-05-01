@@ -8,6 +8,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\StatementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,4 +67,32 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/forms', [FormController::class, 'index'])->name('forms.index');
     Route::delete('/forms/{form}', [FormController::class, 'destroy']);
     Route::put('/forms/{form}', [FormController::class, 'update'])->name('forms.update');
+
+    // Protected routes for responses
+    Route::get('/forms/{form}/responses', [AnswerController::class, 'showResponses'])->name('responses.index');
+    Route::get('/responses/{response_id}/answers', [AnswerController::class, 'getAnswers'])->name('responses.answers');
+
+    // Protected routes for file download
+    Route::get('/download-file', function (Illuminate\Http\Request $request) {
+        // Ensure the user is authenticated
+        if (!auth()->check()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Validate the file path
+        $request->validate([
+            'path' => 'required|string',
+        ]);
+
+        // Extract the relative file path from the URL
+        $filePath = str_replace(url('/storage'), 'public', $request->query('path'));
+
+        // Check if the file exists
+        if (!Storage::exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        // Serve the file as a download
+        return Storage::download($filePath);
+    })->name('download-file');
 });

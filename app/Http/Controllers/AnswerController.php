@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreResponseRequest;
+use App\Http\Resources\ResponseResource;
 use App\Models\Answer;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
@@ -77,6 +78,64 @@ class AnswerController extends Controller
         ], 201);
     }
 
+    public function showResponses($form_version_id)
+    {
+
+        request()->validate([
+            'form_version_id' => 'exists:form_versions,id',
+        ], [
+            'form_version_id.exists' => 'The selected form version does not exist.', // Custom message
+        ]);
+
+        $formVersion = \App\Models\Form_version::with('form', 'questions', 'responses')->findOrFail($form_version_id);
+
+        // Prepare the response data
+        $data = [
+            'form_version_id' => $formVersion->id,
+            'title' => $formVersion->form->title,
+            'description' => $formVersion->form->description,
+            'total_question' => $formVersion->questions->count(),
+            'version' => $formVersion->version,
+            'versions' => $formVersion->form->formVersions->map(function ($formVersion) {
+                return [
+                    'id' => $formVersion->id,
+                    'version' => $formVersion->version,
+                ];
+            })->toArray(),
+            'responses' => ResponseResource::collection($formVersion->responses),
+        ];
+
+
+        return response()->json($data, 200);
+    }
+
+    public function getAnswers(Request $request, $response_id)
+    {
+
+        // Ensure the user is authenticated
+        if (!auth()->check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+
+        // Validate the response_id
+        $response = \App\Models\Response::with(['answers.question'])->findOrFail($response_id);
+
+        // Prepare the questions and answers
+        $questions = $response->answers->map(function ($answer) {
+            return [
+                'question' => $answer->question->question_text ?? 'Unknown Question',
+                'answer' => $this->formatAnswer($answer),
+                'question_type' => $answer->question->type,
+            ];
+        });
+
+        // Return the data
+        return response()->json([
+            'questions' => $questions,
+        ], 200);
+    }
+
     protected function generateCaseId(StoreResponseRequest $request)
     {
         $answers = $request->input('answers');
@@ -99,7 +158,7 @@ class AnswerController extends Controller
 
                 // Find the selected option by matching content (id)
                 $answer_text = $answerData['content']; // this should be the option.id
-                $matchedOption = collect($questionData['options'])->firstWhere('long_form', $answer_text);
+                $matchedOption = collect($questionData['options'])->firstWhere('text', $answer_text);
 
                 if ($matchedOption && isset($matchedOption['short_form'])) {
                     $prefixedShortForm = $matchedOption['short_form'];
@@ -120,5 +179,56 @@ class AnswerController extends Controller
         $caseId = sprintf('%s-%06d', $prefixedShortForm, $newNumber);
 
         return $caseId;
+    }
+
+
+    /**
+     * Format the answer based on its type.
+     *
+     * @param \App\Models\Answer $answer
+     * @return string|array
+     */
+    protected function formatAnswer($answer)
+    {
+        if ($answer->answer_text) {
+            return $answer->answer_text; // Text-based answer
+        }
+
+        if (is_string($answer->answer_array)) {
+            // Decode JSON if it's a string
+            $decodedArray = json_decode($answer->answer_array, true);
+            if (is_array($decodedArray)) {
+                $answer->answer_array = $decodedArray; // Update the answer array
+            }
+        }
+
+        if ($answer->answer_array) {
+            // Check if the array contains storage paths
+            if ($this->isStoragePathArray($answer->answer_array)) {
+                // Convert storage paths to public URLs
+                return array_map(function ($path) {
+                    return asset($path); // Convert to public URL
+                }, $answer->answer_array);
+            }
+
+            // Combine array elements into a single string separated by '/'
+            return implode(' / ', $answer->answer_array);
+        }
+
+        return 'No answer provided'; // Fallback for empty answers
+    }
+
+
+    /**
+     * Determine if the array contains storage paths.
+     *
+     * @param array $array
+     * @return bool
+     */
+    protected function isStoragePathArray(array $array)
+    {
+        return collect($array)->every(function ($item) {
+            return str_starts_with($item, '/storage/');
+        });
     }
 }

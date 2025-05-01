@@ -6,6 +6,7 @@ use App\Http\Requests\StoreFormRequest;
 use App\Http\Resources\FormResource;
 use App\Models\Form;
 use App\Models\FormQuestion;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -29,9 +30,7 @@ class FormController extends Controller
     {
 
         $validated = $request->validated();
-
         $form = Form::create($validated);
-
         $formVersion = $form->formVersions()->create([
             'created_at' => now(),
             'updated_at' => now(),
