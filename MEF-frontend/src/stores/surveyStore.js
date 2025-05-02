@@ -3,6 +3,9 @@ import { defineStore } from 'pinia'
 import { axiosClient } from '@/axios'
 import { useUserStore } from './userStore'
 
+const LARGE_FILE_THRESHOLD = 20 * 1024 * 1024 // 20MB
+const CHUNK_SIZE = 10 * 1024 * 1024 // 10MB
+
 export const useSurveyStore = defineStore('survey', {
   state: () => ({
     questionTypes: ['text', 'textarea', 'radio', 'checkbox', 'select', 'file'],
@@ -45,6 +48,11 @@ export const useSurveyStore = defineStore('survey', {
       })
       return model
     },
+    async deleteFormVersion(formVersionId) {
+      return axiosClient.delete(`/form-versions/${formVersionId}`).then((response) => {
+        return response
+      })
+    },
     async getFormResponses(form_version_id) {
       return axiosClient.get(`/forms/${form_version_id}/responses`).then((response) => {
         return response
@@ -55,7 +63,7 @@ export const useSurveyStore = defineStore('survey', {
         return response
       })
     },
-    async submitAnswer(surveyId, answers) {
+    async submitAnswer(surveyId, answers, onProgress) {
       const formData = new FormData()
 
       formData.append('survey_id', answers.survey_id)
@@ -67,11 +75,22 @@ export const useSurveyStore = defineStore('survey', {
         formData.append(`answers[${questionId}][is_prefixed]`, answer.is_prefixed)
 
         if (answer.type === 'file') {
-          // Append multiple files
-          for (let i = 0; i < answer.content.length; i++) {
-            console.log(answer.content[i])
+          // Check if any file exceeds the LARGE_FILE_THRESHOLD
+          const hasLargeFile = answer.content.some((file) => file.size > LARGE_FILE_THRESHOLD)
 
-            formData.append(`answers[${questionId}][content][${i}]`, answer.content[i])
+          if (hasLargeFile) {
+            // Upload all files via uploadLargeFileInChunks
+            for (let i = 0; i < answer.content.length; i++) {
+              const file = answer.content[i]
+              const filePath = await this.uploadLargeFileInChunks(file, questionId, onProgress)
+              formData.append(`answers[${questionId}][content][${i}]`, filePath)
+            }
+          } else {
+            // Conventional approach for all files
+            for (let i = 0; i < answer.content.length; i++) {
+              const file = answer.content[i]
+              formData.append(`answers[${questionId}][content][${i}]`, file)
+            }
           }
         } else if (answer.type === 'checkbox') {
           // Append multiple checkboxes
@@ -83,11 +102,59 @@ export const useSurveyStore = defineStore('survey', {
         }
       }
 
-      return axiosClient.post(`/forms/${surveyId}/answers`, formData).then((response) => {
-        console.log(response.data)
-        this.answerRecord.push(response.data)
-        localStorage.setItem('answerRecord', JSON.stringify(this.answerRecord))
-        return response
+      return axiosClient
+        .post(`/forms/${surveyId}/answers`, formData, {
+          onUploadProgress: (progressEvent) => {
+            if (onProgress) {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total,
+              )
+              onProgress(percentCompleted) // Call the callback with the progress percentage
+            }
+          },
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.answerRecord.push(response.data)
+          localStorage.setItem('answerRecord', JSON.stringify(this.answerRecord))
+          return response
+        })
+    },
+    async uploadLargeFileInChunks(file, questionId, onProgress = null) {
+      const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
+      const fileId = `${questionId}_${Date.now()}_${file.name.replace(/\W/g, '')}`
+
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * CHUNK_SIZE
+        const end = Math.min(start + CHUNK_SIZE, file.size)
+        const chunk = file.slice(start, end)
+
+        const chunkForm = new FormData()
+        chunkForm.append('file', chunk)
+        chunkForm.append('file_id', fileId)
+        chunkForm.append('chunk_index', i)
+        chunkForm.append('total_chunks', totalChunks)
+        chunkForm.append('file_name', file.name)
+
+        await axiosClient.post('/upload-chunk', chunkForm)
+
+        if (onProgress) {
+          const percent = Math.round(((i + 1) / totalChunks) * 100)
+          onProgress(percent)
+        }
+      }
+
+      // After uploading all chunks, notify server to assemble
+      const res = await axiosClient.post('/merge-chunks', {
+        file_id: fileId,
+        file_name: file.name,
+      })
+
+      return res.data.chunk_ref // relative path to saved file
+    },
+    async downloadResponse(formVersionId) {
+      return axiosClient.get(`/forms/${formVersionId}/responses/download`, {
+        responseType: 'blob',
       })
     },
     async createSurvey(survey) {

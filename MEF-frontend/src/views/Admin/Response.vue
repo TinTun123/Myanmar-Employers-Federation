@@ -27,7 +27,7 @@
         </div>
 
         <div class="md:col-start-3 md:col-span-6">
-            <DropDownComponent :versions="model.versions" v-model="model.version">
+            <DropDownComponent :versions="model.versions" v-model="versionId">
             </DropDownComponent>
         </div>
 
@@ -85,7 +85,7 @@
                 <h1>Version {{ model.version }}</h1>
 
                 <div class="flex gap-2">
-                    <button
+                    <button @click.stop="downloadResponse(model.form_version_id)"
                         class="flex items-center group cursor-pointer hover:bg-black/80 transition gap-2 px-2 py-1 rounded-full border border-black/70 text-xs">
                         <span class="text-black/70 group-hover:text-white text-xs">Download</span>
                         <svg class="opacity-60 fill-black group-hover:fill-white group-hover:opacity-100" width="16"
@@ -103,7 +103,7 @@
                         </svg>
 
                     </button>
-                    <button
+                    <button @click.stop="deleteFormVersion(model.form_version_id)"
                         class="flex items-center transition gap-2 px-2 py-1 rounded-full group cursor-pointer hover:bg-[#F3462B] border border-[#F3462B] text-xs text-[#F3462B]">
                         <span class="text-[#F3462B] group-hover:text-white text-xs">Delete</span>
                         <svg class="fill-[#F3462B] opacity-60 group-hover:fill-white group-hover:opacity-100" width="12"
@@ -140,7 +140,7 @@
 
 </template>
 <script setup>
-import AdminTitleComponent from '@/components/Admin/adminTitleComponent.vue'
+import AdminTitleComponent from '@/components/admin/adminTitleComponent.vue'
 import DropDownComponent from '@/components/DropdownComponent.vue'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -160,6 +160,12 @@ const model = ref({
     ],
 })
 
+
+const versionId = ref({
+    'id': '',
+    'version': 1
+})
+
 const isDrop = ref(false)
 const selectedRowId = ref(null)
 const questionAnswer = ref({});
@@ -168,8 +174,8 @@ const surveyStore = useSurveyStore()
 const userStore = useUserStore()
 
 onMounted(() => {
-    const form_version_id = route.params.id
 
+    const form_version_id = route.params.id
 
     if (form_version_id) {
         userStore.loading.state = true;
@@ -180,6 +186,12 @@ onMounted(() => {
 
             if (response.status === 200) {
                 model.value = response.data;
+
+                versionId.value = {
+                    'id': response.data.form_version_id,
+                    'version': response.data.version
+                }
+
             } else {
                 userStore.setNotification({
                     type: 'error',
@@ -194,11 +206,11 @@ onMounted(() => {
     }
 })
 
-watch(() => model.value.version, (newValue) => {
+watch(() => versionId.value, (newValue) => {
     if (newValue) {
         userStore.loading.state = true;
         userStore.loading.message = 'Loading responses...'
-        surveyStore.getFormResponses(newValue).then((response) => {
+        surveyStore.getFormResponses(newValue.id).then((response) => {
             userStore.loading.state = false;
             userStore.loading.message = ''
 
@@ -225,6 +237,74 @@ function selectResponse(id) {
     } else {
         surveyStore.selectedresponseId = id
     }
+}
+
+function downloadResponse(form_version_id) {
+    surveyStore.downloadResponse(form_version_id).then((response) => {
+        if (response.status === 200) {
+            const blob = new Blob([response.data], { type: response.headers['content-type'] })
+            const link = document.createElement('a')
+            const url = window.URL.createObjectURL(blob)
+            link.href = url
+
+            // You can name the file dynamically or statically
+            link.download = `form_responses_${form_version_id}.xlsx`
+
+            document.body.appendChild(link)
+            link.click()
+
+            // Clean up
+            window.URL.revokeObjectURL(url)
+            link.remove()
+        } else {
+            userStore.setNotification({
+                type: 'error',
+                message: 'Failed to download response.',
+            })
+        }
+    }).catch((error) => {
+        console.error(error)
+        userStore.setNotification({
+            type: 'error',
+            message: error?.response?.data?.message || 'Download failed.',
+        })
+    })
+}
+
+function deleteFormVersion(id) {
+    userStore.loading.state = true;
+    userStore.loading.message = 'Deleting response...'
+    surveyStore.deleteFormVersion(id).then((response) => {
+        userStore.loading.state = false;
+        userStore.loading.message = ''
+
+        if (response.status === 200) {
+            // Set local model to the response data
+            model.value = response.data;
+            versionId.value = {
+                'id': response.data.form_version_id,
+                'version': response.data.version
+            }
+
+            userStore.setNotification({
+                type: 'success',
+                message: 'Response deleted successfully.',
+            })
+        } else {
+            userStore.setNotification({
+                type: 'error',
+                message: 'Failed to delete response.',
+            })
+        }
+    }).catch((error) => {
+        console.error(error)
+        userStore.loading.state = false;
+        userStore.loading.message = ''
+        userStore.setNotification({
+            type: 'error',
+            message: error.response.data.message,
+        })
+    })
 }
 
 </script>

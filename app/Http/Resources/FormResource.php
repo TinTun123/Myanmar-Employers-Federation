@@ -33,7 +33,7 @@ class FormResource extends JsonResource
             'version' => $this->latestFormVersion->version ?? 1,
             'form_version_id' => $this->latestFormVersion->id,
             'responses_count' => $this->latestFormVersion?->responses()->count() ?? 0,
-            'public_url' => 'https://mef-myanmar.com/reports/' . $this->id
+            'public_url' => 'http://localhost:5173/reports/' . $this->id
         ];
     }
 }

@@ -63,6 +63,17 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 function updateModel() {
+
+  // Trim trailing whitespace for short_form and text
+  props.modelValue.data.options.forEach(option => {
+    if (typeof option.short_form === 'string') {
+      option.short_form = option.short_form.trimEnd();
+    }
+    if (typeof option.text === 'string') {
+      option.text = option.text.trimEnd();
+    }
+  });
+
   emit('update:modelValue', props.modelValue)
 }
 

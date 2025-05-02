@@ -3,10 +3,12 @@
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\StatementController;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,6 +45,15 @@ Route::post('/news/{news}/like', [NewsController::class, 'like']); // Like a new
 Route::get('/forms/{form}', [FormController::class, 'show'])->name('forms.show');
 Route::post('/forms/{form}/answers', [AnswerController::class, 'store'])->name('answer.store');
 
+// Chunked file upload routes
+Route::post('/upload-chunk', [FileUploadController::class, 'uploadChunk'])
+    ->middleware('throttle:upload')
+    ->withoutMiddleware('throttle:api');
+
+Route::post('/merge-chunks', [FileUploadController::class, 'mergeChunks'])
+    ->middleware('throttle:upload')
+    ->withoutMiddleware('throttle:api');
+
 // Protected routes for creating, updating, and deleting news
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -71,6 +82,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Protected routes for responses
     Route::get('/forms/{form}/responses', [AnswerController::class, 'showResponses'])->name('responses.index');
     Route::get('/responses/{response_id}/answers', [AnswerController::class, 'getAnswers'])->name('responses.answers');
+    Route::delete('/form-versions/{form_version}', [AnswerController::class, 'deleteVersion'])->name('form_version.delete');
+    Route::get('/forms/{form_version}/responses/download', [AnswerController::class, 'downloadSheet'])->name('responses.download');
 
     // Protected routes for file download
     Route::get('/download-file', function (Illuminate\Http\Request $request) {

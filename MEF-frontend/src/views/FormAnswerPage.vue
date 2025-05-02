@@ -1,9 +1,10 @@
 <template>
     <div
         class="bg-black min-h-screen pt-12 relative overflow-x-hidden bg-no-repeat bg-center bg-[url(../assets/bg-illustration.svg)] bg-cover">
+
         <LoadingComponent v-if="userStore.loading.state"></LoadingComponent>
 
-        <div class="z-100 md:grid md:grid-cols-12 md:gap-4 md:space-y-8">
+        <div v-else class="z-100 md:grid md:grid-cols-12 md:gap-4 md:space-y-8">
             <div
                 class="flex md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-3 gap-4 items-center rounded-r-lg bg-secondary-red px-4 py-2 w-[90%] md:w-auto">
                 <div
@@ -109,9 +110,28 @@
                 </div>
             </div>
         </div>
-        <Notification></Notification>
     </div>
 
+    <transition name="fade">
+        <teleport to="body">
+            <div v-if="uploadProgress" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg w-96 mx-4 relative overflow-hidden">
+                    <div class="bg-primary-red/80 text-sm text-white text-center p-2">
+                        <svg class="w-4 h-4 animate-spin absolute top-2 left-2" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.47715 2 2 6.47715 2 12H0C0 5.37258 5.37258 0 12 0V2Z"
+                                fill="currentColor" />
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12H24C24 18.6274 18.6274 24 12 24V22Z"
+                                fill="currentColor" />
+                        </svg>
+                        <h3 class="text-sm font-semibold">Uploading answers</h3>
+                        <h1 class="text-xs font-medium">{{ uploadProgress }}% complete...</h1>
+                    </div>
+
+                </div>
+            </div>
+        </teleport>
+    </transition>
 </template>
 
 <script setup>
@@ -149,6 +169,7 @@ const model = ref({
     ],
 })
 
+const uploadProgress = ref(0); // Track upload progress
 const router = useRouter();
 const questionsPerPage = 3 // Number of questions per page
 const currentPage = ref(0) // Track the current page
@@ -229,18 +250,18 @@ onMounted(() => {
 
         my_error.value = error.response.data.message;
     })
-
 })
 
 const selectedOptionQ1 = ref('')
 const otherDetailsQ1 = ref('')
 const selectedCheckboxes = ref([])
-
 const selectedOptionQ2 = ref('')
 const otherDetailsQ2 = ref('')
 
 
 function submitAnswer() {
+    console.log('submitAnswer called');
+
     let pre_answer = {};
     pre_answer = JSON.parse(JSON.stringify(answer.value));
 
@@ -265,7 +286,14 @@ function submitAnswer() {
         'form_version_id': model.value.form_version_id,
     }
 
-    surveyStore.submitAnswer(payload.survey_id, payload).then((response) => {
+    surveyStore.submitAnswer(payload.survey_id, payload, (progress) => {
+        uploadProgress.value = progress;
+
+        if (progress === 100) {
+            uploadProgress.value = 0; // Reset progress after completion
+        }
+
+    }).then((response) => {
         showNotification('Answer submitted successfully!', 'success');
     }).catch((error) => {
 
@@ -284,19 +312,12 @@ const caseId = computed(() => {
 
     if (model.value.form_version_id && surveyStore.answerRecord.length > 0) {
         const answerIndex = surveyStore.answerRecord.findIndex((record) => {
-
-            console.log('Answer record.form_version', parseInt(record.form_version_id));
-            console.log('model.value.form_version', model.value.form_version_id);
-
             return parseInt(record.form_version_id) === model.value.form_version_id;
         });
-        console.log('Answer index', answerIndex);
-
 
         if (answerIndex === -1) {
             return false; // Not submitted
         } else {
-
             return surveyStore.answerRecord[answerIndex].case_id; // Submitted
         }
     } else {
@@ -317,7 +338,6 @@ const showNotification = (message, type) => {
 
 const validateRequiredFields = () => {
     const currentQuestions = paginatedQuestions.value;
-
 
     for (const question of currentQuestions) {
         const value = answer.value[question.id];

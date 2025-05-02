@@ -81,28 +81,53 @@ class StoreResponseRequest extends FormRequest
                     break;
 
                 case FormQuestion::TYPE_FILE:
-                    // Fetch uploaded files instead of relying on input
+                    // Fetch uploaded files or input strings
                     $uploadedFiles = $this->file("answers.$questionId.content");
+                    $content = $this->input("answers.$questionId.content");
 
-                    if (!is_array($uploadedFiles)) {
-                        throw ValidationException::withMessages([
-                            "answers.$questionId.content" => 'Files must be uploaded as an array.',
-                        ]);
-                    }
-
-                    // Optional: Further check if all elements are UploadedFile instances
-                    foreach ($uploadedFiles as $uploadedFile) {
-                        if (!$uploadedFile->isValid()) {
+                    if (!is_null($uploadedFiles)) {
+                        if (!is_array($uploadedFiles) && empty($uploadedFiles)) {
                             throw ValidationException::withMessages([
-                                "answers.$questionId.content" => 'One or more uploaded files are invalid.',
+                                "answers.$questionId.content" => 'Files must be uploaded as an array or not content.',
                             ]);
                         }
+
+                        foreach ($uploadedFiles as $file) {
+                            if (!($file instanceof \Illuminate\Http\UploadedFile)) {
+                                throw ValidationException::withMessages([
+                                    "answers.$questionId.content" => 'Each file must be a valid uploaded file.',
+                                ]);
+                            }
+                        }
+
+                        $answerData['content'] = $uploadedFiles;
+                        break;
+                    } else {
+
+                        if (!is_array($content) && empty($content)) {
+                            throw ValidationException::withMessages([
+                                "answers.$questionId.content" => 'URLs must be uploaded as an array or empty array.',
+                            ]);
+                        }
+
+                        // Validate each element in the array
+                        foreach ($content as $item) {
+                            if (!($item instanceof \Illuminate\Http\UploadedFile) && !is_string($item)) {
+                                throw ValidationException::withMessages([
+                                    "answers.$questionId.content" => 'Each answer must be either a valid file or a URL string.',
+                                ]);
+                            }
+
+                            if (is_string($item) && !preg_match('/^(\/storage\/upload\/answers\/.+|chunkref_[a-zA-Z0-9\-]+_.+)$/', $item)) {
+                                throw ValidationException::withMessages([
+                                    "answers.$questionId.content" => 'Invalid format for file reference.',
+                                ]);
+                            }
+                        }
+
+                        $answerData['content'] = $uploadedFiles;
+                        break;
                     }
-
-                    // Overwrite the content with uploaded files, so next steps can use it
-                    $answerData['content'] = $uploadedFiles;
-
-                    break;
 
                 default:
                     throw ValidationException::withMessages([
