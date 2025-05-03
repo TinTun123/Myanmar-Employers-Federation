@@ -5,6 +5,7 @@ import EditUser from '@/components/admin/editUser.vue'
 import Dashboard from '@/components/Dashboard.vue'
 import DefaultLayout from '@/layouts/defaultLayout.vue'
 import { useUserStore } from '@/stores/userStore'
+import Aboutus from '@/views/Aboutus.vue'
 import ManageBoard from '@/views/Admin/ManageBoard.vue'
 import ManageForms from '@/views/Admin/ManageForms.vue'
 import ManageNews from '@/views/Admin/ManageNews.vue'
@@ -59,6 +60,11 @@ const router = createRouter({
           path: '/reports/:id',
           name: 'formAnswer',
           component: FormAnswerPage,
+        },
+        {
+          path: '/about-us/',
+          name: 'aboutUs',
+          component: Aboutus,
         },
       ],
     },

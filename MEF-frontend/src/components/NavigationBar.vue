@@ -35,7 +35,7 @@
                 Activities & News
             </RouterLink>
 
-            <RouterLink :to="{ name: 'home' }" class="stroke-1 font-medium text-base text-white py-3 ">
+            <RouterLink :to="{ name: 'aboutUs' }" class="stroke-1 font-medium text-base text-white py-3 ">
                 About us
             </RouterLink>
 
@@ -69,7 +69,7 @@
                 Activities & News
             </RouterLink>
 
-            <RouterLink :to="{ name: 'home' }"
+            <RouterLink :to="{ name: 'aboutUs' }"
                 class="stroke-1 font-medium text-xs text-center text-white py-3 border-b-2 border-white/20">
                 About us
             </RouterLink>
