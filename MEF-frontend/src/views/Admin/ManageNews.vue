@@ -17,7 +17,7 @@
       </button>
     </div>
 
-    <div class="my-4 md:my-8 flex items-center justify-start">
+    <!-- <div class="my-4 md:my-8 flex items-center justify-start">
       <div
         class="px-4 py-2 bg-white shadow-lg rounded-full mx-6 group cursor-pointer hover:shadow-none transition hover:border border-black/40">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +26,7 @@
             fill="black" fill-opacity="0.6" />
         </svg>
       </div>
-    </div>
+    </div> -->
 
 
     <div class="mr-4">

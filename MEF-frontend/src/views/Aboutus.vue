@@ -1,30 +1,29 @@
 <template>
-    <div class="h-[256px] md:h-[30vh] lg:h-[80vh] relative px-[90px] bg-black text-center">
+    <div class="h-[256px] md:h-[30vh] lg:h-[80vh] relative md:px-[90px] bg-black text-center">
+
         <div class="w-full h-full custom-bg absolute top-0 left-0 z-10">
 
         </div>
+
         <img src="../assets/yangon-UG-ILO-33-movement.jpg" class="w-full h-full brightness-60" alt="">
 
         <h1
             class="text-white italic text-base underline underline-offset-8 absolute z-20 top-[64px] lg:top-[90px] right-4 md:right-[15%]">
             "About Us"
         </h1>
+
         <transition name="slide-in-right">
             <p
                 class="text-white text-xs md:text-sm font-semibold absolute z-20 bottom-4 lg:bottom-[90px] right-4 w-[65%] leading-6 text-right md:w-[35%] md:right-[15%]">
                 “We stand as a non-governmental organization full of freedom, justice and accountability and to protect
-                and
-                promote the interests of the state and its people.”
+                and promote the interests of the state and its people.”
             </p>
         </transition>
-
     </div>
 
     <div class="md:grid md:grid-cols-12 md:gap-4 relative overflow-hidden">
-
-
         <div class="mt-8 mx-4 md:col-start-3 md:col-span-8 md:mx-0">
-            <h3 class="text-black underline underline-offset-8 text-xl tracking-widest">“Our goals”</h3>
+            <h3 class="text-[#5F2021] underline underline-offset-8 text-xl tracking-widest">“Our goals”</h3>
         </div>
 
         <div class="md:w-[40vw] absolute -right-12 top-0 z-0">
@@ -66,7 +65,8 @@
         </div>
 
         <div class="mt-8 mx-4 md:col-start-3 md:col-span-8 md:mx-0">
-            <h3 class="text-black text-right underline underline-offset-8 text-xl tracking-widest">“Organization"</h3>
+            <h3 class="text-[#5F2021] text-right underline underline-offset-8 text-xl tracking-widest">“Organization"
+            </h3>
         </div>
 
         <div class="mt-8 mx-4 h-[357px] flex justify-center items-center md:col-start-3 md:col-span-8 md:mx-0 mb-8">
@@ -361,7 +361,7 @@
             class="object-cover w-full h-full brightness-30 absolute top-0 bottom-0 left-0 right-0 -z-10" alt="">
 
         <h4
-            class="text-white px-4 py-4 absolute -bottom-12 right-0 md:right-[10%] font-semibold text-base underline underline-offset-8 tracking-widest bg-secondary-red rounded-lg text-center">
+            class="text-white px-4 py-4 absolute -bottom-12 right-0 md:right-[10%] font-semibold text-base underline underline-offset-8 tracking-widest bg-[#5F2021] rounded-lg text-center">
             “Our commitments”
         </h4>
 
@@ -485,6 +485,91 @@
                 </div>
                 <h2 class="text-sm lg:text-base text-center">To cooperate with international organizations.</h2>
             </div>
+        </div>
+    </div>
+
+    <div class="md:grid md:grid-cols-12">
+        <div class="mt-8 mx-4 md:col-start-3 md:col-span-8 md:mx-0">
+            <h3 class="text-[#5F2021] text-left underline underline-offset-8 text-xl tracking-widest">"Reach out to us"
+            </h3>
+        </div>
+
+        <div
+            class="flex flex-col gap-8 justify-between items-center mx-4 my-8 md:grid md:grid-cols-12 md:gap-8 md:col-start-3 md:col-span-8 md:mx-0">
+            <div
+                class="p-6 gap-4 flex flex-col justify-between items-center bg-white rounded-lg shadow-lg border border-[#A087F4] relative md:col-start-2 md:col-span-5">
+                <div class="bg-white rounded-full p-2 border border-[#A087F4] absolute -top-4 -left-4">
+                    <svg width="32" height="26" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M27.5345 16.5298C27.3809 15.4626 26.5569 14.6306 25.4961 14.3826C21.3729 13.4162 20.3393 11.0418 20.1649 8.4082C19.4337 8.2722 18.1329 8.125 15.9249 8.125C13.7169 8.125 12.4161 8.2722 11.6849 8.4082C11.5105 11.0418 10.4769 13.4162 6.35365 14.3826C5.29285 14.6322 4.46885 15.4626 4.31525 16.5298L3.52005 22.037C3.24005 23.9762 4.66405 25.725 6.64485 25.725H25.2049C27.1841 25.725 28.6097 23.9762 28.3297 22.037L27.5345 16.5298ZM15.9249 21.7122C13.6929 21.7122 11.8833 19.9202 11.8833 17.7122C11.8833 15.5042 13.6929 13.7122 15.9249 13.7122C18.1569 13.7122 19.9665 15.5042 19.9665 17.7122C19.9665 19.9202 18.1553 21.7122 15.9249 21.7122ZM31.8449 6.525C31.8065 4.125 25.6977 0.1266 15.9249 0.125C6.15045 0.1266 0.0416505 4.125 0.00485054 6.525C-0.0319495 8.925 0.0384506 12.0482 4.06085 11.5282C8.76645 10.9186 8.47685 9.2754 8.47685 6.9266C8.47685 5.2882 12.3041 4.893 15.9249 4.893C19.5457 4.893 23.3713 5.2882 23.3729 6.9266C23.3729 9.2754 23.0833 10.9186 27.7889 11.5282C31.8097 12.0482 31.8817 8.925 31.8449 6.525Z"
+                            fill="#A087F4" />
+                    </svg>
+                </div>
+                <h1 class="text-sm text-black/70 font-semibold">Phone</h1>
+                <h3 class="text-base italic text-black/60">+66 - 094614548</h3>
+            </div>
+
+            <div
+                class="p-6 gap-4 flex flex-col justify-between items-center bg-white rounded-lg shadow-lg border border-[#A087F4] relative md:col-span-5">
+                <div class="bg-white rounded-full p-2 border border-[#A087F4] absolute -top-4 -left-4">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18.7154 23.6008C18.6075 23.7274 18.4793 23.8277 18.3383 23.8962C18.1972 23.9647 18.046 24 17.8933 24C17.7406 24 17.5893 23.9647 17.4483 23.8962C17.3072 23.8277 17.1791 23.7274 17.0712 23.6008L14.5992 20.707C14.4912 20.5806 14.4056 20.4306 14.3471 20.2655C14.2887 20.1004 14.2586 19.9234 14.2586 19.7447C14.2586 19.566 14.2887 19.389 14.3471 19.2239C14.4056 19.0588 14.4912 18.9087 14.5992 18.7824C14.8172 18.5271 15.1129 18.3838 15.4212 18.3838C15.5739 18.3838 15.7251 18.419 15.8661 18.4874C16.0072 18.5558 16.1353 18.656 16.2433 18.7824L17.8875 20.707L22.0153 15.8749C22.1233 15.7486 22.2515 15.6483 22.3925 15.5799C22.5336 15.5115 22.6847 15.4763 22.8374 15.4763C22.9901 15.4763 23.1413 15.5115 23.2823 15.5799C23.4234 15.6483 23.5515 15.7486 23.6595 15.8749C23.7674 16.0013 23.8531 16.1513 23.9115 16.3164C23.9699 16.4816 24 16.6585 24 16.8372C24 17.016 23.9699 17.1929 23.9115 17.3581C23.8531 17.5232 23.7674 17.6732 23.6595 17.7996L18.7154 23.6008ZM11.7539 21.84H2.33213C1.04946 21.84 0 20.6115 0 19.11V2.73C0 1.2285 1.04946 0 2.33213 0H20.9892C22.2719 0 23.3213 1.2285 23.3213 2.73V11.8482C22.0777 11.1556 20.7046 10.843 19.3299 10.9393C17.9552 11.0356 16.6238 11.5378 15.4596 12.3991C14.2955 13.2603 13.3366 14.4526 12.6723 15.8647C12.008 17.2769 11.66 18.8629 11.6607 20.475C11.6607 20.9391 11.6956 21.3895 11.7539 21.84ZM11.0426 11.8345C11.4158 12.1075 11.9055 12.1075 12.2787 11.8345L20.5228 5.80124C20.6397 5.72441 20.7421 5.6206 20.8237 5.4961C20.9054 5.3716 20.9646 5.229 20.9979 5.07693C21.0311 4.92486 21.0376 4.76648 21.017 4.61138C20.9964 4.45628 20.9492 4.30768 20.8781 4.17457C20.807 4.04147 20.7136 3.92663 20.6035 3.837C20.4935 3.74738 20.369 3.68483 20.2377 3.65314C20.1063 3.62146 19.9709 3.62129 19.8395 3.65266C19.7081 3.68403 19.5835 3.74628 19.4733 3.83564L11.6607 9.55499L3.84802 3.83564C3.73778 3.74628 3.6132 3.68403 3.48182 3.65266C3.35044 3.62129 3.21498 3.62146 3.08366 3.65314C2.95233 3.68483 2.82786 3.74738 2.71778 3.837C2.6077 3.92663 2.5143 4.04147 2.44324 4.17457C2.37217 4.30768 2.32491 4.45628 2.30433 4.61138C2.28374 4.76648 2.29026 4.92486 2.32348 5.07693C2.35669 5.229 2.41592 5.3716 2.49758 5.4961C2.57924 5.6206 2.68163 5.72441 2.79856 5.80124L11.0426 11.8345Z"
+                            fill="#A087F4" />
+                    </svg>
+
+                </div>
+                <h1 class="text-sm text-black/70 font-semibold">Email</h1>
+                <h3 class="text-base italic text-black/60 tracking-wider">mef.office@mef-myanmar.com</h3>
+            </div>
+
+            <div
+                class="p-6 gap-4 flex flex-col justify-between items-center bg-white rounded-lg shadow-lg border border-[#1877F2] relative md:col-start-4 md:col-span-6">
+                <div class="bg-white rounded-full p-2 border border-[#1877F2] absolute -top-4 -left-4">
+                    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_306_313)">
+                            <path
+                                d="M32 16C32 7.1635 24.8365 0 16 0C7.1635 0 0 7.1635 0 16C0 23.986 5.851 30.6054 13.5 31.8056V20.625H9.4375V16H13.5V12.475C13.5 8.465 15.8888 6.25 19.5435 6.25C21.294 6.25 23.125 6.5625 23.125 6.5625V10.5H21.1075C19.1199 10.5 18.5 11.7334 18.5 12.9987V16H22.9375L22.2281 20.625H18.5V31.8056C26.149 30.6054 32 23.9861 32 16Z"
+                                fill="#1877F2" />
+                            <path
+                                d="M22.2281 20.625L22.9375 16H18.5V12.9987C18.5 11.7332 19.1199 10.5 21.1075 10.5H23.125V6.5625C23.125 6.5625 21.294 6.25 19.5434 6.25C15.8888 6.25 13.5 8.465 13.5 12.475V16H9.4375V20.625H13.5V31.8056C14.327 31.9352 15.1629 32.0002 16 32C16.8371 32.0002 17.673 31.9352 18.5 31.8056V20.625H22.2281Z"
+                                fill="white" />
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_306_313">
+                                <rect width="32" height="32" fill="white" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+
+
+                </div>
+                <h1 class="text-sm text-black/70 font-semibold text-center">Myanmar Employers Federation Facebook page
+                </h1>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="mr-4 rounded-r-lg bg-[#5F2021] p-4 mb-8 md:w-[50%]">
+        <div class="mx-4">
+            <h3 class="text-white text-left underline underline-offset-8 text-xl tracking-widest">"Newsletters"</h3>
+        </div>
+
+        <div class="mx-6 relative my-8">
+            <input type="text"
+                class="rounded-full p-2 text-sm w-full bg-transparent border border-white/60 text-white placeholder:text-white focus:outline-none focus:border-white/80"
+                placeholder="Enter your email address" />
+            <button
+                class="text-xs bg-white/90 p-2 rounded-full absolute right-0 h-full cursor-pointer hover:bg-white/70 active:bg-white/90">Subscribe</button>
+        </div>
+
+        <div class="text-center">
+            <h3 class="text-base text-white italic">THANKS</h3>
+            <h2 class="text-base text-white italic">We wil keep you posted!!</h2>
         </div>
     </div>
 </template>

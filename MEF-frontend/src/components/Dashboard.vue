@@ -55,6 +55,11 @@
         ]" class="rounded-full shadow-lg border border-secondary-red px-3 py-1">
           <span class="font-semibold text-xs">Editors</span>
         </div>
+
+        <div @click="logout"
+          class="rounded-full shadow-lg border border-secondary-red px-3 py-1 bg-white text-black/60">
+          <span class="font-semibold text-xs">Logout</span>
+        </div>
       </div>
 
       <div class="min-h-screen">
@@ -119,6 +124,10 @@
           class="rounded-full lg:hover:shadow-none transition cursor-pointer text-center shadow-lg border border-secondary-red px-3 py-1">
           <span class="font-semibold text-xs">Editors</span>
         </div>
+        <div @click="logout"
+          class="rounded-full bg-white text-black/60 lg:hover:shadow-none transition cursor-pointer text-center shadow-lg border border-secondary-red px-3 py-1">
+          <span class="font-semibold text-xs">Logout</span>
+        </div>
       </div>
       <div class="flex-auto bg-white flex flex-col">
 
@@ -144,4 +153,12 @@ const { deviceType } = useDeviceType()
 function goTo(path) {
   router.push({ name: path })
 }
+
+function logout() {
+  userStore.logout().then((response) => {
+    // Pop up success message
+    router.push({ name: 'login' });
+  });
+}
+
 </script>

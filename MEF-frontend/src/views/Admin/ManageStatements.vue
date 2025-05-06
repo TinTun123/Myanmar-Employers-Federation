@@ -17,7 +17,7 @@
       </button>
     </div>
 
-    <div class="my-4 md:my-8 mx-6 flex items-center justify-start ">
+    <!-- <div class="my-4 md:my-8 mx-6 flex items-center justify-start ">
       <div class="px-4 py-2 bg-white shadow-lg rounded-full cursor-pointer group active:shadow-none transition">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -26,7 +26,7 @@
         </svg>
       </div>
 
-    </div>
+    </div> -->
 
     <div class="mr-4">
       <button @click="goTo('adminEditStatements')"

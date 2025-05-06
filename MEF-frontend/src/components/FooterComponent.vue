@@ -6,7 +6,7 @@
         <!-- Logo -->
         <span class="text-white text-center text-xs md:text-base font-semibold">Myanmar Employers Federation</span>
         <div class="flex justify-center items-center">
-          <img class="w-[80px] h-[80px] rounded-full" src="../assets/mef logo.jpeg" alt="" />
+          <img class="w-[80px] h-[80px] rounded-lg" src="../assets/mef logo.jpeg" alt="" />
         </div>
       </div>
 
@@ -22,7 +22,8 @@
         <RouterLink v-if="!isLogin" class="border-r-2 border-white pr-2" :to="{ name: 'login' }">
           Admin login
         </RouterLink>
-        <h3 v-else @click.stop="logout" class="border-r-2 border-white pr-2">Logout</h3>
+        <h3 v-else @click.stop="goToDashboard" class="border-r-2 border-white pr-2 cursor-pointer">Dashboard
+        </h3>
       </div>
     </div>
     <div class="text-center text-[10px] text-white py-2">
@@ -44,12 +45,7 @@ const isLogin = computed(() => {
   return userStore.isUserLoginIn();
 })
 
-function logout() {
-  userStore.logout().then((response) => {
-    // Pop up success message
-    router.push({ name: 'login' });
-  });
-
-
+function goToDashboard() {
+  router.push({ name: 'adminNews' });
 }
 </script>

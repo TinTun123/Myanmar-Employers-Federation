@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DynamicContentController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\NewsController;
@@ -84,6 +85,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/responses/{response_id}/answers', [AnswerController::class, 'getAnswers'])->name('responses.answers');
     Route::delete('/form-versions/{form_version}', [AnswerController::class, 'deleteVersion'])->name('form_version.delete');
     Route::get('/forms/{form_version}/responses/download', [AnswerController::class, 'downloadSheet'])->name('responses.download');
+
+    // Protected routes for dynamic content
+    Route::apiResource('dynamic-content', DynamicContentController::class);
 
     // Protected routes for file download
     Route::get('/download-file', function (Illuminate\Http\Request $request) {

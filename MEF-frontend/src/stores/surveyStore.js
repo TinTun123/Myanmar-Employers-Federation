@@ -16,6 +16,9 @@ export const useSurveyStore = defineStore('survey', {
       ? JSON.parse(localStorage.getItem('answerRecord'))
       : [],
     selectedresponseId: null,
+    dynamicBoard: {
+      data: [],
+    },
   }),
   actions: {
     async fetchSurveys() {
@@ -26,6 +29,38 @@ export const useSurveyStore = defineStore('survey', {
         userStore.loading.state = false
         userStore.loading.message = ''
         this.surveys = response.data
+        return response
+      })
+    },
+    async storeDyncmicContent(dynamicContent) {
+      return axiosClient.post('/dynamic-content', dynamicContent).then((response) => {
+        this.dynamicBoard.data.push(response.data.data)
+
+        return response
+      })
+    },
+    async updateDyncmicContent(dynamicContent, id) {
+      return axiosClient.post(`/dynamic-content/${id}`, dynamicContent).then((response) => {
+        const index = this.dynamicBoard.data.findIndex((d) => d.id === response.data.data.id)
+        if (index !== -1) {
+          this.dynamicBoard.data[index] = response.data.data
+        }
+        return response
+      })
+    },
+    async deleteDyncmicContent(id) {
+      return axiosClient.delete(`/dynamic-content/${id}`).then((response) => {
+        if (response.status === 200) {
+          this.dynamicBoard.data = this.dynamicBoard.data.filter((d) => d.id !== id)
+        }
+        return response
+      })
+    },
+    async fetchDynamicContent() {
+      console.log('fetchDynamicContent')
+
+      return axiosClient.get('/dynamic-content').then((response) => {
+        this.dynamicBoard = response.data
         return response
       })
     },

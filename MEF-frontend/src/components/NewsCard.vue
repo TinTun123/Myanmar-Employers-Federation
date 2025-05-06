@@ -16,8 +16,6 @@
     <div class="flex items-center justify-between px-2">
       <!-- Msg / Likes / date -->
       <div class="flex justify-betweem items-center gap-4">
-
-
         <!-- Date icon -->
 
         <div class="flex gap-1 items-center">
